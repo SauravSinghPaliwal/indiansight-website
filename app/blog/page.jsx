@@ -102,7 +102,7 @@ export default function BlogPage() {
           <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-[10px] font-semibold tracking-widest text-white/85 ring-1 ring-white/10">
             {featured.tag}
           </span>
-          <span className="inline-flex items-center rounded-full bg-[#7477FF]/40 px-3 py-1 text-[10px] font-semibold tracking-widest text-white ring-1 ring-[#7477FF]/50">
+          <span className="inline-flex items-center rounded-full bg-[#F47A35]/40 px-3 py-1 text-[10px] font-semibold tracking-widest text-white ring-1 ring-[#F47A35]/50">
             FEATURED
           </span>
           <span className="text-[10px] font-semibold tracking-widest text-white/55">{featured.meta}</span>

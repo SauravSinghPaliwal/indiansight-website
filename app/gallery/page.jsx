@@ -128,7 +128,7 @@ export default function GalleryPage() {
                 <span
                   key={kpi}
                   className="rounded-full px-3 py-1 text-[11px] font-black uppercase tracking-wide text-black"
-                  style={{ background: '#F2D34A' }}
+                  style={{ background: '#F8B432' }}
                 >
                   {kpi}
                 </span>
@@ -156,7 +156,7 @@ export default function GalleryPage() {
       </section>
 
       {/* CTA */}
-      <section className="rounded-[28px] p-8 text-center ring-1 ring-white/10" style={{ background: '#F35F4E' }}>
+      <section className="rounded-[28px] p-8 text-center ring-1 ring-white/10" style={{ background: '#E8342C' }}>
         <div className="text-2xl font-black uppercase tracking-tight text-black">Got a Project in Mind?</div>
         <p className="mt-2 text-sm text-black/70 max-w-sm mx-auto">
           Tell us your challenge — we&apos;ll show you what AI can do.

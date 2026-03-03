@@ -82,7 +82,7 @@ export default function AboutPage() {
                 className="flex items-center justify-between rounded-2xl bg-white/5 px-5 py-4 ring-1 ring-white/10"
               >
                 <span className="text-sm text-white/65">{label}</span>
-                <span className="text-2xl font-black uppercase text-white" style={{ color: '#7477FF' }}>{value}</span>
+                <span className="text-2xl font-black uppercase text-white" style={{ color: '#F47A35' }}>{value}</span>
               </div>
             ))}
           </div>
@@ -118,7 +118,7 @@ export default function AboutPage() {
             <div key={name} className="rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10 text-center">
               <div className="mx-auto mb-3 grid h-16 w-16 place-items-center rounded-full bg-white/10 text-3xl">{emoji}</div>
               <div className="text-[12px] font-black uppercase tracking-wide text-white">{name}</div>
-              <div className="mt-1 text-[11px] font-semibold text-[#7477FF] uppercase tracking-wider">{role}</div>
+              <div className="mt-1 text-[11px] font-semibold text-[#F47A35] uppercase tracking-wider">{role}</div>
               <p className="mt-2 text-xs text-white/60 leading-relaxed">{bio}</p>
             </div>
           ))}
@@ -126,7 +126,7 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="rounded-[28px] p-8 text-center ring-1 ring-white/10" style={{ background: '#F35F4E' }}>
+      <section className="rounded-[28px] p-8 text-center ring-1 ring-white/10" style={{ background: '#E8342C' }}>
         <div className="text-2xl font-black uppercase tracking-tight text-black">Join Our Growing Team</div>
         <p className="mt-2 text-sm text-black/70 max-w-md mx-auto">
           We&apos;re always looking for brilliant AI engineers, researchers, and consultants who want

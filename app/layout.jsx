@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
       <body
         className="min-h-screen p-5 sm:p-8"
         style={{
-          background: '#7477FF',
+          background: 'linear-gradient(135deg, #F8B432 0%, #F47A35 50%, #E8342C 100%)',
           fontFamily:
             "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
         }}

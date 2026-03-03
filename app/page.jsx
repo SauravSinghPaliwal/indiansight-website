@@ -27,13 +27,13 @@ function Scribble() {
     <svg viewBox="0 0 180 90" className="h-14 w-44" fill="none" aria-hidden="true">
       <path
         d="M10 58c26-26 38 10 68-18 26-24 34 10 60-12 18-15 26 3 32-6"
-        stroke="#F2D34A"
+        stroke="#F8B432"
         strokeWidth="6"
         strokeLinecap="round"
       />
       <path
         d="M132 22l14-10m-2 22l18 6m-22 8l-16 12"
-        stroke="#F2D34A"
+        stroke="#F8B432"
         strokeWidth="6"
         strokeLinecap="round"
       />
@@ -135,7 +135,7 @@ function HeroCard() {
 // ── Small cards (Services / Approach) ────────────────────────────────────────
 
 function TinyCharacters({ tone }) {
-  const hot = tone === 'services' ? '#F2D34A' : '#F35F4E';
+  const hot = tone === 'services' ? '#F8B432' : '#E8342C';
   const accent = '#111827';
   return (
     <svg viewBox="0 0 280 120" className="w-full" aria-hidden="true">
@@ -156,7 +156,7 @@ function TinyCharacters({ tone }) {
 }
 
 function SmallCard({ tone, title, kicker, desc, href = '#' }) {
-  const bg = tone === 'services' ? '#F35F4E' : '#F2D34A';
+  const bg = tone === 'services' ? '#E8342C' : '#F8B432';
   return (
     <Link
       href={href}
@@ -465,7 +465,7 @@ function PhoneMock() {
             </div>
           </div>
 
-          <div className="mt-4 overflow-hidden rounded-3xl bg-[#6F7EF8] p-4">
+          <div className="mt-4 overflow-hidden rounded-3xl bg-[#F47A35] p-4">
             <div className="flex items-center justify-between">
               <div className="text-white">
                 <div className="text-[18px] font-black uppercase leading-tight">ARCHITECTURE</div>
@@ -527,7 +527,7 @@ const deliverables = [
 
 function RightPanel() {
   return (
-    <div className="relative overflow-hidden rounded-[28px] p-6" style={{ background: '#7477FF' }}>
+    <div className="relative overflow-hidden rounded-[28px] p-6" style={{ background: 'linear-gradient(135deg, #F8B432 0%, #F47A35 50%, #E8342C 100%)' }}>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(255,255,255,0.20),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(255,255,255,0.12),transparent_45%)]" />
 
       <div className="relative space-y-4">

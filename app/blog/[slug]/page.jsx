@@ -148,7 +148,7 @@ export default function BlogPostPage({ params }) {
         </h1>
 
         <div className="mt-5 flex items-center gap-3 flex-wrap">
-          <div className="grid h-10 w-10 place-items-center rounded-full bg-[#7477FF] text-[13px] font-black text-white">
+          <div className="grid h-10 w-10 place-items-center rounded-full bg-[#F47A35] text-[13px] font-black text-white">
             {post.author[0]}
           </div>
           <div>
