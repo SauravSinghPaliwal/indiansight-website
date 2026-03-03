@@ -1,22 +1,50 @@
 import Link from 'next/link';
+import RevealSection from './components/RevealSection';
 
 // ── Shared helpers ──────────────────────────────────────────────────────────
 
 function SectionHeader({ kicker, title, desc }) {
   return (
     <div className="mb-4">
-      <div className="text-[10px] font-semibold uppercase tracking-widest text-white/60">{kicker}</div>
-      <div className="mt-2 text-2xl font-black uppercase tracking-tight text-white sm:text-3xl">{title}</div>
-      {desc && <p className="mt-2 max-w-2xl text-sm text-white/70">{desc}</p>}
+      <div className="text-[10px] font-semibold uppercase tracking-widest text-white/50">{kicker}</div>
+      <div className="mt-2 font-black uppercase tracking-tight text-white" style={{ fontSize: 'var(--display-sm)' }}>{title}</div>
+      {desc && <p className="mt-2 max-w-2xl text-sm text-white/60">{desc}</p>}
     </div>
   );
 }
 
 function Pill({ children }) {
   return (
-    <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-[10px] font-semibold tracking-widest text-white/85 ring-1 ring-white/10">
+    <span className="inline-flex items-center rounded-full bg-white/8 px-3 py-1 text-[10px] font-semibold tracking-widest text-white/75 ring-1 ring-white/10">
       {children}
     </span>
+  );
+}
+
+// ── Marquee strip ─────────────────────────────────────────────────────────────
+
+const marqueeItems = [
+  'AI STRATEGY', 'GENAI / RAG', 'GOVERNANCE', 'ARCHITECTURE ADVISORY',
+  'MLOPS READINESS', 'ENTERPRISE AI', 'DISCOVERY SPRINT', 'BLUEPRINT',
+  'SCALE READINESS', 'RESPONSIBLE AI', 'VENDOR NEUTRAL', 'CONSULTING-FIRST',
+];
+
+function MarqueeStrip() {
+  const items = [...marqueeItems, ...marqueeItems];
+  return (
+    <div
+      className="overflow-hidden rounded-[18px] py-3"
+      style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
+    >
+      <div className="marquee-track">
+        {items.map((item, i) => (
+          <span key={i} className="flex items-center gap-3 px-6 text-[10px] font-semibold tracking-widest text-white/40 whitespace-nowrap">
+            {item}
+            <span style={{ color: '#F47A35' }}>·</span>
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -45,7 +73,7 @@ function Bullet({ title, desc }) {
   return (
     <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
       <div className="text-[11px] font-black uppercase tracking-widest text-white">{title}</div>
-      <div className="mt-1 text-xs leading-relaxed text-white/75">{desc}</div>
+      <div className="mt-1 text-xs leading-relaxed text-white/65">{desc}</div>
     </div>
   );
 }
@@ -56,46 +84,57 @@ function HeroCard() {
   return (
     <section
       id="ai-consulting"
-      className="relative overflow-hidden rounded-[28px] p-7 shadow-[0_26px_70px_rgba(0,0,0,0.35)]"
-      style={{ background: '#2B2C30' }}
+      className="relative overflow-hidden rounded-[28px] p-8 sm:p-10 shadow-[0_26px_70px_rgba(0,0,0,0.45)]"
+      style={{ background: '#1E1F24' }}
     >
-      <div className="absolute right-6 top-16 hidden lg:block">
+      {/* Subtle gradient glow */}
+      <div
+        className="pointer-events-none absolute -top-20 -left-20 h-72 w-72 rounded-full opacity-20 blur-[80px]"
+        style={{ background: 'radial-gradient(circle, #F47A35, transparent 70%)' }}
+      />
+
+      <div className="absolute right-8 top-16 hidden lg:block">
         <Scribble />
       </div>
 
-      <div className="max-w-[620px]">
-        <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-[10px] font-semibold tracking-widest text-white/85 ring-1 ring-white/10">
+      <div className="relative max-w-[680px]">
+        <div className="inline-flex items-center gap-2 rounded-full bg-white/8 px-4 py-2 text-[10px] font-semibold tracking-widest text-white/75 ring-1 ring-white/10">
           CONSULTING-FIRST AI
-          <span className="text-white/40">•</span>
+          <span className="text-white/30">·</span>
           ROADMAP · GOVERNANCE · ARCHITECTURE
         </div>
 
-        <h1 className="mt-4 text-[40px] font-black uppercase leading-[0.92] tracking-tight text-white sm:text-[54px]">
+        <h1
+          className="mt-5 font-black uppercase leading-[0.9] tracking-tight text-white"
+          style={{ fontSize: 'var(--display-hero)' }}
+        >
           MAKE AI
           <br />
           DECISIONS
           <br />
-          THAT SCALE
+          <span style={{ background: 'linear-gradient(135deg, #F8B432, #F47A35, #E8342C)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+            THAT SCALE
+          </span>
         </h1>
 
-        <p className="mt-4 max-w-[520px] text-sm leading-relaxed text-white/70">
-          Indian Sight is a consulting-first AI firm. We help leadership and technical teams
-          prioritize use cases, define governance, and design infrastructure-aware
-          architectures—so initiatives don&apos;t stall after the pilot.
+        <p className="mt-5 max-w-[520px] text-sm leading-relaxed text-white/60">
+          Built for India. Ready for the world. Indian Sight is a consulting-first AI firm helping
+          leadership and technical teams prioritize use cases, define governance, and design
+          infrastructure-aware architectures — so initiatives don&apos;t stall after the pilot.
         </p>
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-5 flex flex-wrap gap-2">
           <Pill>AI STRATEGY</Pill>
           <Pill>GENAI / RAG ADVISORY</Pill>
           <Pill>GOVERNANCE & RISK</Pill>
           <Pill>ARCHITECTURE ADVISORY</Pill>
-          <Pill>MLOps READINESS</Pill>
+          <Pill>MLOPS READINESS</Pill>
         </div>
 
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+        <div className="mt-7 flex flex-col gap-3 sm:flex-row">
           <Link
             href="/#services"
-            className="group inline-flex items-center justify-between gap-4 rounded-2xl bg-white px-6 py-4 text-[12px] font-black uppercase tracking-widest text-black shadow-[0_16px_45px_rgba(0,0,0,0.28)]"
+            className="group inline-flex items-center justify-between gap-4 rounded-2xl bg-white px-6 py-4 text-[12px] font-black uppercase tracking-widest text-black shadow-[0_16px_45px_rgba(0,0,0,0.28)] hover:shadow-[0_20px_55px_rgba(0,0,0,0.32)] transition-shadow"
           >
             <span>
               <span className="block text-[10px] font-semibold tracking-widest text-black/40">INDIAN SIGHT</span>
@@ -108,10 +147,10 @@ function HeroCard() {
 
           <Link
             href="/#approach"
-            className="group inline-flex flex-1 items-center justify-between gap-4 rounded-2xl bg-white/10 px-6 py-4 text-[12px] font-black uppercase tracking-widest text-white ring-1 ring-white/10 hover:bg-white/15"
+            className="group inline-flex flex-1 items-center justify-between gap-4 rounded-2xl bg-white/8 px-6 py-4 text-[12px] font-black uppercase tracking-widest text-white ring-1 ring-white/10 hover:bg-white/12 transition-colors"
           >
             <span>
-              <span className="block text-[10px] font-semibold tracking-widest text-white/55">HOW WE ENGAGE</span>
+              <span className="block text-[10px] font-semibold tracking-widest text-white/45">HOW WE ENGAGE</span>
               DISCOVERY → BLUEPRINT
             </span>
             <span className="grid h-11 w-11 place-items-center rounded-xl bg-white/10 text-white transition group-hover:rotate-[6deg]">
@@ -123,11 +162,11 @@ function HeroCard() {
         <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Bullet title="1) Discovery" desc="Use-case prioritization, constraints, data readiness, success metrics." />
           <Bullet title="2) Blueprint" desc="Target architecture, governance controls, evaluation plan, rollout path." />
-          <Bullet title="3) Support" desc="Execution support when needed (pilot guidance, vendor coordination, scale readiness)." />
+          <Bullet title="3) Support" desc="Execution support when needed — pilot guidance, vendor coordination, scale readiness." />
         </div>
       </div>
 
-      <div className="pointer-events-none absolute inset-0 ring-1 ring-white/10" />
+      <div className="pointer-events-none absolute inset-0 rounded-[28px] ring-1 ring-white/8" />
     </section>
   );
 }
@@ -160,13 +199,13 @@ function SmallCard({ tone, title, kicker, desc, href = '#' }) {
   return (
     <Link
       href={href}
-      className="group relative overflow-hidden rounded-[26px] p-6 shadow-[0_22px_62px_rgba(0,0,0,0.24)] transition hover:-translate-y-0.5 block"
+      className="group relative overflow-hidden rounded-[26px] p-6 shadow-[0_22px_62px_rgba(0,0,0,0.24)] transition hover:-translate-y-1 block"
       style={{ background: bg }}
     >
-      <div className="absolute right-5 top-5 grid h-11 w-11 place-items-center rounded-full bg-white/55">↗</div>
-      <div className="text-[10px] font-semibold uppercase tracking-widest text-black/70">{kicker}</div>
-      <div className="mt-3 text-3xl font-black uppercase tracking-tight text-black">{title}</div>
-      <p className="mt-2 text-sm text-black/70">{desc}</p>
+      <div className="absolute right-5 top-5 grid h-11 w-11 place-items-center rounded-full bg-white/55 transition group-hover:rotate-12">↗</div>
+      <div className="text-[10px] font-semibold uppercase tracking-widest text-black/60">{kicker}</div>
+      <div className="mt-3 font-black uppercase tracking-tight text-black" style={{ fontSize: 'var(--display-sm)' }}>{title}</div>
+      <p className="mt-2 text-sm text-black/65">{desc}</p>
       <div className="mt-4">
         <TinyCharacters tone={tone} />
       </div>
@@ -190,18 +229,18 @@ function BlogCard({ title, excerpt, meta, tag, href = '/blog' }) {
   return (
     <Link
       href={href}
-      className="group relative overflow-hidden rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10 transition hover:-translate-y-0.5 hover:bg-white/10 block"
+      className="group relative overflow-hidden rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10 transition hover:-translate-y-0.5 hover:bg-white/8 block"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-[10px] font-semibold tracking-widest text-white/85 ring-1 ring-white/10">
+            <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-[10px] font-semibold tracking-widest text-white/75 ring-1 ring-white/10">
               {tag}
             </span>
-            <span className="text-[10px] font-semibold tracking-widest text-white/55">{meta}</span>
+            <span className="text-[10px] font-semibold tracking-widest text-white/40">{meta}</span>
           </div>
           <div className="mt-3 line-clamp-2 text-[13px] font-black uppercase tracking-wide text-white">{title}</div>
-          <p className="mt-2 line-clamp-3 text-sm text-white/70">{excerpt}</p>
+          <p className="mt-2 line-clamp-3 text-sm text-white/60">{excerpt}</p>
         </div>
         <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-white/10 ring-1 ring-white/10 transition group-hover:rotate-[6deg]">
           <BlogArrow />
@@ -223,28 +262,28 @@ const blogPosts = [
     tag: 'GENAI / RAG',
     meta: 'Guardrails • 5 min',
     title: 'RAG That Stays Grounded (and Safe)',
-    excerpt: "A practical checklist for grounding, permissions-aware retrieval, evaluation, and rollout—without breaking governance.",
+    excerpt: "A practical checklist for grounding, permissions-aware retrieval, evaluation, and rollout — without breaking governance.",
     href: '/blog/rag-vs-finetuning',
   },
   {
     tag: 'GOVERNANCE',
     meta: 'Risk • 6 min',
     title: "What 'AI Governance' Means in Real Projects",
-    excerpt: "Policies, RBAC, audit trails, and operating models—what to decide early so adoption scales safely.",
+    excerpt: "Policies, RBAC, audit trails, and operating models — what to decide early so adoption scales safely.",
     href: '/blog/responsible-ai-india',
   },
   {
     tag: 'MLOPS',
     meta: 'Operations • 4 min',
     title: 'Production Readiness for AI Systems',
-    excerpt: 'Monitoring, drift planning, lifecycle updates, and cost controls—so systems remain reliable after launch.',
+    excerpt: 'Monitoring, drift planning, lifecycle updates, and cost controls — so systems remain reliable after launch.',
     href: '/blog/roi-ai-projects',
   },
 ];
 
 function BlogSection() {
   return (
-    <section id="blogs" className="rounded-[28px] bg-white/5 p-6 ring-1 ring-white/10">
+    <section id="blogs" className="rounded-[28px] p-6 ring-1 ring-white/10" style={{ background: '#1A1B20' }}>
       <SectionHeader
         kicker="Insights"
         title="Latest blogs"
@@ -256,12 +295,12 @@ function BlogSection() {
         ))}
       </div>
       <div className="mt-5 flex flex-col items-start justify-between gap-3 rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 sm:flex-row sm:items-center">
-        <div className="text-sm text-white/70">
+        <div className="text-sm text-white/55">
           Want these tailored to your industry? We can publish a dedicated series.
         </div>
         <Link
           href="/blog"
-          className="inline-flex items-center gap-2 rounded-2xl bg-white px-5 py-3 text-[11px] font-black uppercase tracking-widest text-black"
+          className="inline-flex items-center gap-2 rounded-2xl bg-white px-5 py-3 text-[11px] font-black uppercase tracking-widest text-black hover:bg-white/90 transition-colors"
         >
           VIEW ALL <span>→</span>
         </Link>
@@ -283,7 +322,7 @@ const services = [
 
 function ServiceGrid() {
   return (
-    <section id="services" className="rounded-[28px] bg-white/5 p-6 ring-1 ring-white/10">
+    <section id="services" className="rounded-[28px] p-6 ring-1 ring-white/10" style={{ background: '#1E2028' }}>
       <SectionHeader
         kicker="Consulting services"
         title="What we advise on"
@@ -291,15 +330,19 @@ function ServiceGrid() {
       />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {services.map((s) => (
-          <div key={s.title} className="rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10 shadow-[0_14px_40px_rgba(0,0,0,0.18)]">
+          <div key={s.title} className="rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10 hover:bg-white/8 transition-colors">
+            <div
+              className="mb-1 h-[2px] w-8 rounded-full"
+              style={{ background: 'linear-gradient(90deg, #F8B432, #E8342C)' }}
+            />
             <div className="text-[12px] font-black uppercase tracking-wide text-white">{s.title}</div>
-            <p className="mt-2 text-sm text-white/70">{s.desc}</p>
+            <p className="mt-2 text-sm text-white/60">{s.desc}</p>
           </div>
         ))}
       </div>
       <div className="mt-5 rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
         <div className="text-[11px] font-black uppercase tracking-widest text-white">Execution support (optional)</div>
-        <p className="mt-1 text-sm text-white/70">
+        <p className="mt-1 text-sm text-white/55">
           When required, we can support pilot execution and scale planning with your internal team or preferred partners.
           Our positioning remains consulting-first.
         </p>
@@ -326,13 +369,14 @@ function Approach() {
         desc="A pragmatic consulting approach that reduces risk and accelerates outcomes."
       />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {steps.map((s) => (
+        {steps.map((s, i) => (
           <div key={s.title} className="rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10">
             <div className="flex items-start gap-3">
-              <div className="grid h-11 w-11 place-items-center rounded-2xl bg-white/10 text-xl">{s.icon}</div>
+              <div className="grid h-11 w-11 place-items-center rounded-2xl bg-white/10 text-xl shrink-0">{s.icon}</div>
               <div>
+                <div className="text-[10px] font-semibold tracking-widest text-white/40 mb-1">0{i + 1}</div>
                 <div className="text-[12px] font-black uppercase tracking-wide text-white">{s.title}</div>
-                <p className="mt-1 text-sm text-white/70">{s.desc}</p>
+                <p className="mt-1 text-sm text-white/60">{s.desc}</p>
               </div>
             </div>
           </div>
@@ -345,29 +389,30 @@ function Approach() {
 // ── Why Us ────────────────────────────────────────────────────────────────────
 
 const whyPoints = [
-  { title: 'Consulting-first', desc: 'We start with decisions: use cases, KPIs, governance, and adoption—before tools.' },
-  { title: 'Infrastructure-aware', desc: 'Architecture guidance grounded in real constraints: security boundaries, latency, and cost.' },
-  { title: 'Production readiness', desc: 'We advise on monitoring, evaluation, and operating models so systems stay reliable over time.' },
-  { title: 'Vendor-neutral', desc: 'We can align with your existing stack and partners—no forced platforms.' },
+  { title: 'Consulting-first', desc: 'We start with decisions: use cases, KPIs, governance, and adoption — before tools.', icon: '🎯' },
+  { title: 'Infrastructure-aware', desc: 'Architecture guidance grounded in real constraints: security boundaries, latency, and cost.', icon: '🏗️' },
+  { title: 'Production readiness', desc: 'We advise on monitoring, evaluation, and operating models so systems stay reliable over time.', icon: '⚙️' },
+  { title: 'Vendor-neutral', desc: 'We align with your existing stack and partners — no forced platforms.', icon: '🤝' },
 ];
 
 function WhyUs() {
   return (
-    <section id="why-us" className="rounded-[28px] bg-white/5 p-6 ring-1 ring-white/10">
+    <section id="why-us" className="rounded-[28px] p-6 ring-1 ring-white/10" style={{ background: '#1A1B20' }}>
       <SectionHeader kicker="Differentiators" title="Why Indian Sight" />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {whyPoints.map((p) => (
-          <div key={p.title} className="rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10">
+          <div key={p.title} className="rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10 hover:bg-white/8 transition-colors">
+            <div className="text-2xl mb-2">{p.icon}</div>
             <div className="text-[12px] font-black uppercase tracking-wide text-white">{p.title}</div>
-            <p className="mt-2 text-sm text-white/70">{p.desc}</p>
+            <p className="mt-2 text-sm text-white/60">{p.desc}</p>
           </div>
         ))}
       </div>
       <div className="mt-5 rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
         <div className="text-[11px] font-black uppercase tracking-widest text-white">Note on delivery</div>
-        <p className="mt-1 text-sm text-white/70">
+        <p className="mt-1 text-sm text-white/55">
           We are comfortable with development, deployment, and scaling. However, we position ourselves as consulting
-          first—execution support is available when needed.
+          first — execution support is available when needed.
         </p>
       </div>
     </section>
@@ -382,27 +427,27 @@ function ContactSection() {
       <SectionHeader
         kicker="Contact"
         title="Talk to us"
-        desc="Share your use case and constraints. We'll suggest the right next step (discovery, blueprint, or review)."
+        desc="Share your use case and constraints. We'll suggest the right next step — discovery, blueprint, or review."
       />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10">
           <div className="text-[12px] font-black uppercase tracking-wide text-white">Email</div>
-          <p className="mt-2 text-sm text-white/70">business@indiansight.in</p>
+          <p className="mt-2 text-sm text-white/60">business@indiansight.in</p>
           <a
             href="mailto:business@indiansight.in"
-            className="mt-4 inline-flex items-center justify-center rounded-2xl bg-white px-5 py-3 text-[11px] font-black uppercase tracking-widest text-black"
+            className="mt-4 inline-flex items-center justify-center rounded-2xl bg-white px-5 py-3 text-[11px] font-black uppercase tracking-widest text-black hover:bg-white/90 transition-colors"
           >
             Send an email
           </a>
         </div>
         <div className="rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10">
           <div className="text-[12px] font-black uppercase tracking-wide text-white">Schedule a call</div>
-          <p className="mt-2 text-sm text-white/70">
+          <p className="mt-2 text-sm text-white/60">
             Prefer a call? Book a time with our consulting team directly.
           </p>
           <Link
             href="/contact"
-            className="mt-4 inline-flex items-center justify-center rounded-2xl bg-white/10 px-5 py-3 text-[11px] font-black uppercase tracking-widest text-white ring-1 ring-white/10 hover:bg-white/15"
+            className="mt-4 inline-flex items-center justify-center rounded-2xl bg-white/10 px-5 py-3 text-[11px] font-black uppercase tracking-widest text-white ring-1 ring-white/10 hover:bg-white/15 transition-colors"
           >
             Go to contact page
           </Link>
@@ -425,14 +470,14 @@ function WhiteDoodleArrows() {
 
 function PhoneMock() {
   return (
-    <div className="relative mx-auto w-[280px] sm:w-[330px]">
+    <div className="relative mx-auto w-[280px] sm:w-[320px]">
       <div className="relative rounded-[48px] bg-black p-[10px] shadow-[0_30px_100px_rgba(0,0,0,0.45)]">
         <div className="rounded-[38px] bg-[#0B0B0E] p-4">
           <div className="mx-auto mb-4 h-5 w-28 rounded-full bg-black/70" />
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="h-9 w-9 rounded-full bg-gradient-to-br from-red-400 to-yellow-300" />
+              <div className="h-9 w-9 rounded-full" style={{ background: 'linear-gradient(135deg, #F8B432, #E8342C)' }} />
               <div className="text-sm text-white/90 font-semibold">Consulting Dashboard</div>
             </div>
             <div className="flex items-center gap-2">
@@ -453,7 +498,7 @@ function PhoneMock() {
 
           <div className="mt-4 rounded-3xl bg-white/10 p-3 text-white">
             <div className="flex items-start gap-3">
-              <div className="mt-0.5 grid h-11 w-11 place-items-center rounded-2xl bg-yellow-300/95 text-black">🧠</div>
+              <div className="mt-0.5 grid h-11 w-11 place-items-center rounded-2xl text-black" style={{ background: '#F8B432' }}>🧠</div>
               <div className="flex-1">
                 <div className="text-[13px] font-black uppercase tracking-wide">GENAI / RAG</div>
                 <div className="text-[16px] font-black uppercase leading-tight">GOVERNED DESIGN</div>
@@ -465,24 +510,24 @@ function PhoneMock() {
             </div>
           </div>
 
-          <div className="mt-4 overflow-hidden rounded-3xl bg-[#F47A35] p-4">
+          <div className="mt-4 overflow-hidden rounded-3xl p-4" style={{ background: '#F47A35' }}>
             <div className="flex items-center justify-between">
               <div className="text-white">
                 <div className="text-[18px] font-black uppercase leading-tight">ARCHITECTURE</div>
                 <div className="text-[18px] font-black uppercase leading-tight">& SCALE PLAN</div>
               </div>
-              <div className="rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold text-white">policy-aware ▾</div>
+              <div className="rounded-full bg-white/20 px-3 py-1 text-[11px] font-semibold text-white">policy-aware ▾</div>
             </div>
 
-            <div className="mt-3 grid grid-cols-3 gap-2 text-[10px] text-white/85">
+            <div className="mt-3 grid grid-cols-3 gap-2 text-[10px] text-white/90">
               {[
                 { label: 'GOVERNANCE', sub: 'RBAC & controls' },
                 { label: 'MLOps', sub: 'Monitoring & drift' },
                 { label: 'INFRA', sub: 'On-prem / hybrid' },
               ].map(({ label, sub }) => (
-                <div key={label} className="rounded-2xl bg-white/10 p-3 ring-1 ring-white/10">
+                <div key={label} className="rounded-2xl bg-white/15 p-3 ring-1 ring-white/15">
                   <div className="text-[11px] font-black uppercase">{label}</div>
-                  <div className="mt-1 text-[9px] text-white/75">{sub}</div>
+                  <div className="mt-1 text-[9px] text-white/80">{sub}</div>
                 </div>
               ))}
             </div>
@@ -527,20 +572,25 @@ const deliverables = [
 
 function RightPanel() {
   return (
-    <div className="relative overflow-hidden rounded-[28px] p-6" style={{ background: 'linear-gradient(135deg, #F8B432 0%, #F47A35 50%, #E8342C 100%)' }}>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(255,255,255,0.20),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(255,255,255,0.12),transparent_45%)]" />
+    <div
+      className="relative overflow-hidden rounded-[28px] p-6"
+      style={{ background: 'linear-gradient(160deg, #F8B432 0%, #F47A35 45%, #E8342C 100%)' }}
+    >
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.18),transparent_50%),radial-gradient(circle_at_80%_80%,rgba(0,0,0,0.15),transparent_50%)]" />
 
       <div className="relative space-y-4">
         {/* Discovery Sprint card */}
-        <div className="rounded-[28px] bg-black/35 p-6 ring-1 ring-white/15 shadow-[0_22px_70px_rgba(0,0,0,0.35)]">
+        <div className="rounded-[28px] bg-black/30 p-6 ring-1 ring-white/15 shadow-[0_22px_70px_rgba(0,0,0,0.35)] backdrop-blur-sm">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="text-[10px] font-semibold uppercase tracking-widest text-white/70">Start here</div>
-            <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-[10px] font-semibold tracking-widest text-white/85 ring-1 ring-white/10">
+            <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-[10px] font-semibold tracking-widest text-white ring-1 ring-white/15">
               CONSULTING-FIRST
             </span>
           </div>
 
-          <div className="mt-3 text-2xl font-black uppercase tracking-tight text-white">Discovery Sprint</div>
+          <div className="mt-3 font-black uppercase tracking-tight text-white" style={{ fontSize: 'var(--display-sm)' }}>
+            Discovery Sprint
+          </div>
           <p className="mt-2 text-sm leading-relaxed text-white/75">
             Get clarity fast: use-case prioritization, constraints, governance inputs, and an
             infrastructure-aware plan that can scale.
@@ -548,8 +598,8 @@ function RightPanel() {
 
           <div className="mt-4 grid grid-cols-2 gap-3">
             {rightStats.map((s) => (
-              <div key={s.label} className="rounded-2xl bg-white/10 p-4 ring-1 ring-white/10">
-                <div className="text-[10px] font-semibold uppercase tracking-widest text-white/70">{s.label}</div>
+              <div key={s.label} className="rounded-2xl bg-white/12 p-4 ring-1 ring-white/15">
+                <div className="text-[10px] font-semibold uppercase tracking-widest text-white/60">{s.label}</div>
                 <div className="mt-1 text-[14px] font-black uppercase tracking-wide text-white">{s.value}</div>
               </div>
             ))}
@@ -558,13 +608,13 @@ function RightPanel() {
           <div className="mt-4 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center rounded-2xl bg-white px-5 py-3 text-[11px] font-black uppercase tracking-widest text-black"
+              className="inline-flex items-center justify-center rounded-2xl bg-white px-5 py-3 text-[11px] font-black uppercase tracking-widest text-black hover:bg-white/90 transition-colors"
             >
               Contact us
             </Link>
             <Link
               href="/#approach"
-              className="inline-flex items-center justify-center rounded-2xl bg-white/10 px-5 py-3 text-[11px] font-black uppercase tracking-widest text-white ring-1 ring-white/10 hover:bg-white/15"
+              className="inline-flex items-center justify-center rounded-2xl bg-white/15 px-5 py-3 text-[11px] font-black uppercase tracking-widest text-white ring-1 ring-white/15 hover:bg-white/20 transition-colors"
             >
               See the approach
             </Link>
@@ -583,7 +633,7 @@ function RightPanel() {
         </div>
 
         {/* Deliverables */}
-        <div className="rounded-[28px] bg-black/35 p-6 ring-1 ring-white/15">
+        <div className="rounded-[28px] bg-black/30 p-6 ring-1 ring-white/15 backdrop-blur-sm">
           <div className="text-[10px] font-semibold uppercase tracking-widest text-white/70">Typical deliverables</div>
           <ul className="mt-3 space-y-2 text-sm text-white/75">
             {deliverables.map((d) => (
@@ -594,9 +644,9 @@ function RightPanel() {
             ))}
           </ul>
 
-          <div className="mt-4 rounded-2xl bg-white/10 p-4 ring-1 ring-white/10">
+          <div className="mt-4 rounded-2xl bg-white/12 p-4 ring-1 ring-white/15">
             <div className="text-[11px] font-black uppercase tracking-widest text-white">Execution support (later phase)</div>
-            <p className="mt-1 text-sm text-white/75">
+            <p className="mt-1 text-sm text-white/70">
               We stay consulting-led. If needed, we guide pilot implementation and scale-out with your
               internal team or preferred partners.
             </p>
@@ -604,7 +654,7 @@ function RightPanel() {
         </div>
       </div>
 
-      <div className="pointer-events-none absolute inset-0 ring-1 ring-white/10" />
+      <div className="pointer-events-none absolute inset-0 rounded-[28px] ring-1 ring-white/15" />
     </div>
   );
 }
@@ -616,35 +666,59 @@ export default function HomePage() {
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       {/* Left column — all sections */}
       <div className="space-y-6">
-        <HeroCard />
+        <RevealSection>
+          <HeroCard />
+        </RevealSection>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          <SmallCard
-            tone="services"
-            kicker="CONSULTING SERVICES"
-            title="SERVICES"
-            desc="Strategy, GenAI/RAG advisory, governance, architecture guidance, and MLOps readiness."
-            href="/#services"
-          />
-          <SmallCard
-            tone="why"
-            kicker="ENGAGEMENT MODEL"
-            title="APPROACH"
-            desc="Discovery → Blueprint → Pilot advisory → Scale readiness, aligned to constraints and KPIs."
-            href="/#approach"
-          />
-        </div>
+        <RevealSection>
+          <MarqueeStrip />
+        </RevealSection>
 
-        <BlogSection />
-        <ServiceGrid />
-        <Approach />
-        <WhyUs />
-        <ContactSection />
+        <RevealSection>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <SmallCard
+              tone="services"
+              kicker="CONSULTING SERVICES"
+              title="SERVICES"
+              desc="Strategy, GenAI/RAG advisory, governance, architecture guidance, and MLOps readiness."
+              href="/#services"
+            />
+            <SmallCard
+              tone="why"
+              kicker="ENGAGEMENT MODEL"
+              title="APPROACH"
+              desc="Discovery → Blueprint → Pilot advisory → Scale readiness, aligned to constraints and KPIs."
+              href="/#approach"
+            />
+          </div>
+        </RevealSection>
+
+        <RevealSection>
+          <BlogSection />
+        </RevealSection>
+
+        <RevealSection>
+          <ServiceGrid />
+        </RevealSection>
+
+        <RevealSection>
+          <Approach />
+        </RevealSection>
+
+        <RevealSection>
+          <WhyUs />
+        </RevealSection>
+
+        <RevealSection>
+          <ContactSection />
+        </RevealSection>
       </div>
 
       {/* Right column — sticky panel */}
-      <div className="h-fit lg:sticky lg:top-6">
-        <RightPanel />
+      <div className="h-fit lg:sticky lg:top-20">
+        <RevealSection>
+          <RightPanel />
+        </RevealSection>
       </div>
     </div>
   );

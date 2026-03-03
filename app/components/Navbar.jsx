@@ -1,70 +1,58 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 const navItems = [
-  { label: 'AI CONSULTING', href: '/#ai-consulting' },
   { label: 'SERVICES', href: '/#services' },
   { label: 'APPROACH', href: '/#approach' },
   { label: 'WHY US', href: '/about' },
-  { label: 'BLOGS', href: '/blog' },
-  { label: 'CONTACT', href: '/contact' },
+  { label: 'CASE STUDIES', href: '/gallery' },
+  { label: 'BLOG', href: '/blog' },
 ];
-
-function IconSearch() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M21 21l-4.3-4.3m1.3-5.2a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z"
-        stroke="#111827"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function IconMail() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M4 6h16v12H4V6zm0 1.8l8 6 8-6"
-        stroke="#111827"
-        strokeWidth="2"
-        strokeLinejoin="round"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
-    <header className="rounded-full bg-white px-5 py-3 shadow-[0_18px_45px_rgba(0,0,0,0.22)] ring-1 ring-black/10">
-      <div className="flex items-center justify-between gap-4">
+    <header
+      className="sticky top-0 z-50 transition-all duration-300"
+      style={{
+        background: scrolled ? 'rgba(10,10,10,0.92)' : 'rgba(10,10,10,0.75)',
+        backdropFilter: 'blur(14px)',
+        WebkitBackdropFilter: 'blur(14px)',
+        borderBottom: '1px solid rgba(255,255,255,0.08)',
+      }}
+    >
+      <div className="mx-auto flex max-w-screen-2xl items-center justify-between gap-6 px-5 py-3 sm:px-8">
+
         {/* Brand */}
-        <Link href="/" className="flex items-center gap-3 rounded-full focus:outline-none focus:ring-2 focus:ring-black/20">
-          <div className="grid h-11 w-11 place-items-center rounded-full bg-black text-white shadow-sm">
-            <span className="text-[11px] font-black tracking-widest">IS</span>
+        <Link href="/" className="flex items-center gap-3 shrink-0">
+          <div className="h-9 w-9 overflow-hidden rounded-full bg-white">
+            <Image src="/logo.png" alt="IndianSight" width={36} height={36} className="h-full w-full object-cover" />
           </div>
-          <div className="flex items-center gap-2 text-[12px] font-black tracking-[0.28em]">
-            <span className="text-black/70">—</span>
-            <span className="text-black">INDIAN&nbsp;SIGHT</span>
-          </div>
+          <span className="text-[12px] font-black tracking-[0.22em] text-white">
+            INDIAN<span className="text-white/40 mx-1">—</span>SIGHT
+          </span>
         </Link>
 
-        {/* Desktop links */}
-        <nav className="hidden items-center gap-8 text-[10px] font-semibold tracking-widest text-black/70 lg:flex">
+        {/* Desktop nav */}
+        <nav className="hidden items-center gap-7 text-[10px] font-semibold tracking-widest text-white/60 lg:flex">
           {navItems.map((item) => (
             <Link
               key={item.label}
               href={item.href}
-              className={`rounded-full px-2 py-1 hover:bg-black/5 ${
-                pathname === item.href ? 'text-black' : ''
+              className={`transition-colors hover:text-white ${
+                pathname === item.href ? 'text-white' : ''
               }`}
             >
               {item.label}
@@ -72,54 +60,59 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Right actions */}
+        {/* Right CTAs */}
         <div className="flex items-center gap-3">
-          <button
-            className="hidden h-11 w-11 items-center justify-center rounded-full bg-black/5 hover:bg-black/10 md:inline-flex"
-            aria-label="Search"
-          >
-            <IconSearch />
-          </button>
           <a
             href="mailto:business@indiansight.in"
-            className="hidden items-center gap-2 rounded-full border border-black/10 bg-white px-5 py-2 text-[10px] font-semibold tracking-widest text-black/70 hover:bg-black/5 md:inline-flex"
+            className="hidden items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-[10px] font-semibold tracking-widest text-white/70 transition hover:border-white/30 hover:text-white md:inline-flex"
           >
-            <IconMail />
-            EMAIL
+            EMAIL US
           </a>
           <Link
             href="/contact"
-            className="rounded-full bg-black px-5 py-2 text-[10px] font-semibold tracking-widest text-white shadow-[0_14px_35px_rgba(0,0,0,0.28)] hover:-translate-y-px hover:shadow-[0_18px_45px_rgba(0,0,0,0.32)] active:translate-y-0 transition-all"
+            className="rounded-full px-5 py-2 text-[10px] font-black tracking-widest text-black transition hover:opacity-90 active:scale-95"
+            style={{ background: 'linear-gradient(135deg, #F8B432 0%, #F47A35 50%, #E8342C 100%)' }}
           >
             CONTACT US
           </Link>
 
           {/* Mobile burger */}
           <button
-            className="flex h-11 w-11 flex-col items-center justify-center gap-[5px] rounded-full bg-black/5 lg:hidden"
+            className="flex h-9 w-9 flex-col items-center justify-center gap-[5px] rounded-full border border-white/15 lg:hidden"
             onClick={() => setOpen(!open)}
             aria-label="Toggle menu"
           >
-            <span className="block h-[2px] w-5 bg-black rounded-full transition-all" />
-            <span className="block h-[2px] w-5 bg-black rounded-full transition-all" />
-            <span className="block h-[2px] w-5 bg-black rounded-full transition-all" />
+            <span className={`block h-[1.5px] w-4 bg-white rounded-full transition-all ${open ? 'translate-y-[6.5px] rotate-45' : ''}`} />
+            <span className={`block h-[1.5px] w-4 bg-white rounded-full transition-all ${open ? 'opacity-0' : ''}`} />
+            <span className={`block h-[1.5px] w-4 bg-white rounded-full transition-all ${open ? '-translate-y-[6.5px] -rotate-45' : ''}`} />
           </button>
         </div>
       </div>
 
       {/* Mobile menu */}
       {open && (
-        <nav className="mt-3 flex flex-col gap-1 border-t border-black/10 pt-3 lg:hidden">
+        <nav
+          className="border-t px-5 pb-4 pt-3 lg:hidden"
+          style={{ borderColor: 'rgba(255,255,255,0.08)', background: 'rgba(10,10,10,0.97)' }}
+        >
           {navItems.map((item) => (
             <Link
               key={item.label}
               href={item.href}
               onClick={() => setOpen(false)}
-              className="rounded-xl px-4 py-3 text-[11px] font-semibold tracking-widest text-black/70 hover:bg-black/5"
+              className="block py-3 text-[11px] font-semibold tracking-widest text-white/70 hover:text-white transition-colors"
             >
               {item.label}
             </Link>
           ))}
+          <Link
+            href="/contact"
+            onClick={() => setOpen(false)}
+            className="mt-3 inline-flex rounded-full px-5 py-2.5 text-[10px] font-black tracking-widest text-black"
+            style={{ background: 'linear-gradient(135deg, #F8B432 0%, #F47A35 50%, #E8342C 100%)' }}
+          >
+            CONTACT US
+          </Link>
         </nav>
       )}
     </header>

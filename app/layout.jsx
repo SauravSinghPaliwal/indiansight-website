@@ -12,29 +12,26 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className="min-h-screen p-5 sm:p-8"
         style={{
-          background: 'linear-gradient(135deg, #F8B432 0%, #F47A35 50%, #E8342C 100%)',
+          background: '#15161A',
           fontFamily:
             "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
         }}
       >
-        <div id="top" className="mx-auto max-w-6xl">
-          {/* Black frame */}
-          <div
-            className="rounded-[34px] border-[4px] p-5 shadow-[0_40px_140px_rgba(0,0,0,0.45)]"
-            style={{ borderColor: '#000', background: '#0B0B0E' }}
-          >
-            {/* Inner canvas */}
-            <div
-              className="rounded-[28px] p-4 sm:p-5"
-              style={{ background: '#15161A' }}
-            >
-              <Navbar />
-              <main className="mt-6">{children}</main>
-              <Footer />
-            </div>
-          </div>
+        {/* Gradient top accent bar */}
+        <div
+          className="h-[3px] w-full"
+          style={{ background: 'linear-gradient(90deg, #F8B432 0%, #F47A35 50%, #E8342C 100%)' }}
+        />
+
+        <Navbar />
+
+        <main className="mx-auto max-w-screen-2xl px-4 py-6 sm:px-8 sm:py-8">
+          {children}
+        </main>
+
+        <div className="mx-auto max-w-screen-2xl px-4 pb-6 sm:px-8 sm:pb-8">
+          <Footer />
         </div>
       </body>
     </html>
