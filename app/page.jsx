@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import RevealSection from './components/RevealSection';
+import { client, formatDate } from '../lib/sanity';
+import { allPostsQuery } from '../lib/queries';
 
 // ── Shared helpers ──────────────────────────────────────────────────────────
 
@@ -250,38 +252,19 @@ function BlogCard({ title, excerpt, meta, tag, href = '/blog' }) {
   );
 }
 
-const blogPosts = [
-  {
-    tag: 'STRATEGY',
-    meta: 'Roadmap • 4 min',
-    title: "AI Roadmap ≠ Tool Shopping List",
-    excerpt: 'How to prioritize use cases, define success metrics, and sequence delivery so AI adoption stays measurable and realistic.',
-    href: '/blog/llm-enterprise-india',
-  },
-  {
-    tag: 'GENAI / RAG',
-    meta: 'Guardrails • 5 min',
-    title: 'RAG That Stays Grounded (and Safe)',
-    excerpt: "A practical checklist for grounding, permissions-aware retrieval, evaluation, and rollout — without breaking governance.",
-    href: '/blog/rag-vs-finetuning',
-  },
-  {
-    tag: 'GOVERNANCE',
-    meta: 'Risk • 6 min',
-    title: "What 'AI Governance' Means in Real Projects",
-    excerpt: "Policies, RBAC, audit trails, and operating models — what to decide early so adoption scales safely.",
-    href: '/blog/responsible-ai-india',
-  },
-  {
-    tag: 'MLOPS',
-    meta: 'Operations • 4 min',
-    title: 'Production Readiness for AI Systems',
-    excerpt: 'Monitoring, drift planning, lifecycle updates, and cost controls — so systems remain reliable after launch.',
-    href: '/blog/roi-ai-projects',
-  },
-];
+async function BlogSection() {
+  let posts = [];
+  try {
+    const raw = await client.fetch(allPostsQuery);
+    posts = raw.slice(0, 4).map((p) => ({
+      tag: p.category ?? 'INSIGHTS',
+      meta: p.publishedAt ? formatDate(p.publishedAt) : '',
+      title: p.title,
+      excerpt: p.excerpt ?? '',
+      href: `/blog/${p.slug}`,
+    }));
+  } catch {}
 
-function BlogSection() {
   return (
     <section id="blogs" className="rounded-[28px] p-6 ring-1 ring-white/10" style={{ background: '#1A1B20' }}>
       <SectionHeader
@@ -289,11 +272,15 @@ function BlogSection() {
         title="Latest blogs"
         desc="Short, practical notes on strategy, governance, and production readiness."
       />
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {blogPosts.map((p) => (
-          <BlogCard key={p.title} {...p} />
-        ))}
-      </div>
+      {posts.length > 0 ? (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {posts.map((p) => (
+            <BlogCard key={p.title} {...p} />
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm text-white/50 py-4">No posts published yet — check back soon.</p>
+      )}
       <div className="mt-5 flex flex-col items-start justify-between gap-3 rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 sm:flex-row sm:items-center">
         <div className="text-sm text-white/55">
           Want these tailored to your industry? We can publish a dedicated series.
@@ -661,7 +648,7 @@ function RightPanel() {
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
-export default function HomePage() {
+export default async function HomePage() {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       {/* Left column — all sections */}
