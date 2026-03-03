@@ -15,59 +15,74 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }) {
+  const { slug } = await params;
   try {
-    const post = await client.fetch(postBySlugQuery, { slug: params.slug });
+    const post = await client.fetch(postBySlugQuery, { slug });
     if (post) return { title: `${post.title} — IndianSight Blog` };
   } catch {}
   return { title: 'Blog — IndianSight' };
 }
 
-// Portable Text component overrides — styled to match the site
+const CATEGORY_COLORS = {
+  strategy:    { bg: 'rgba(244,122,53,0.15)', text: '#F47A35', border: 'rgba(244,122,53,0.35)' },
+  governance:  { bg: 'rgba(116,119,255,0.15)', text: '#9B9EFF', border: 'rgba(116,119,255,0.35)' },
+  engineering: { bg: 'rgba(34,197,94,0.12)', text: '#4ADE80', border: 'rgba(34,197,94,0.3)' },
+  research:    { bg: 'rgba(232,82,10,0.15)', text: '#F87171', border: 'rgba(232,82,10,0.35)' },
+  product:     { bg: 'rgba(234,179,8,0.12)', text: '#FCD34D', border: 'rgba(234,179,8,0.3)' },
+};
+
+function categoryStyle(cat = '') {
+  return CATEGORY_COLORS[cat?.toLowerCase()] ?? { bg: 'rgba(255,255,255,0.08)', text: 'rgba(255,255,255,0.7)', border: 'rgba(255,255,255,0.15)' };
+}
+
 const ptComponents = {
   block: {
     normal: ({ children }) => (
-      <p className="text-sm text-white/65 leading-relaxed mb-5">{children}</p>
+      <p className="text-[15px] text-white/65 leading-[1.8] mb-5">{children}</p>
     ),
     h2: ({ children }) => (
-      <h2 className="text-[18px] font-black uppercase tracking-wide text-white mt-10 mb-3">{children}</h2>
+      <h2 className="text-[20px] font-bold text-white mt-10 mb-3 leading-snug">{children}</h2>
     ),
     h3: ({ children }) => (
-      <h3 className="text-[14px] font-black uppercase tracking-wide text-white mt-7 mb-2">{children}</h3>
+      <h3 className="text-[16px] font-semibold text-white mt-7 mb-2 leading-snug">{children}</h3>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="border-l-2 pl-5 my-5 italic text-white/50 text-sm leading-relaxed" style={{ borderColor: '#F47A35' }}>
+      <blockquote
+        className="pl-5 my-6 text-[15px] italic text-white/55 leading-relaxed"
+        style={{ borderLeft: '3px solid #F47A35' }}
+      >
         {children}
       </blockquote>
     ),
   },
   list: {
-    bullet: ({ children }) => <ul className="space-y-2 mb-5 mt-1">{children}</ul>,
-    number: ({ children }) => <ol className="space-y-2 mb-5 mt-1 list-decimal list-inside">{children}</ol>,
+    bullet: ({ children }) => <ul className="space-y-2.5 mb-5 mt-1">{children}</ul>,
+    number: ({ children }) => <ol className="space-y-2.5 mb-5 mt-1 list-decimal list-inside">{children}</ol>,
   },
   listItem: {
     bullet: ({ children }) => (
-      <li className="flex gap-2 text-sm text-white/65 leading-relaxed">
-        <span className="mt-0.5 text-white/30 shrink-0">—</span>
+      <li className="flex gap-3 text-[15px] text-white/65 leading-relaxed">
+        <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: '#F47A35' }} />
         <span>{children}</span>
       </li>
     ),
     number: ({ children }) => (
-      <li className="text-sm text-white/65 leading-relaxed">{children}</li>
+      <li className="text-[15px] text-white/65 leading-relaxed">{children}</li>
     ),
   },
   marks: {
     strong: ({ children }) => <strong className="text-white/90 font-semibold">{children}</strong>,
     em: ({ children }) => <em className="text-white/70 italic">{children}</em>,
     code: ({ children }) => (
-      <code className="rounded bg-white/10 px-1.5 py-0.5 text-[12px] font-mono text-white/80">{children}</code>
+      <code className="rounded bg-white/10 px-1.5 py-0.5 text-[13px] font-mono text-white/80">{children}</code>
     ),
     link: ({ value, children }) => (
       <a
         href={value?.href}
         target="_blank"
         rel="noopener noreferrer"
-        className="underline underline-offset-2 text-white/80 hover:text-white transition-colors"
-        style={{ textDecorationColor: '#F47A35' }}
+        className="text-white/80 hover:text-white transition-colors"
+        style={{ textDecoration: 'underline', textDecorationColor: '#F47A35', textUnderlineOffset: '3px' }}
       >
         {children}
       </a>
@@ -76,106 +91,122 @@ const ptComponents = {
   types: {
     image: ({ value }) =>
       value?.asset?.url ? (
-        <div className="my-7 overflow-hidden rounded-[18px]">
+        <figure className="my-8 overflow-hidden rounded-xl">
           <img src={value.asset.url} alt={value.alt || ''} className="w-full object-cover" />
-        </div>
+          {value.caption && (
+            <figcaption className="mt-2 text-center text-[12px] text-white/35">{value.caption}</figcaption>
+          )}
+        </figure>
       ) : null,
   },
 };
 
 export default async function BlogPostPage({ params }) {
+  const { slug } = await params;
   let post = null;
   try {
-    post = await client.fetch(postBySlugQuery, { slug: params.slug });
+    post = await client.fetch(postBySlugQuery, { slug });
   } catch (e) {
     console.error('Sanity fetch error:', e.message);
   }
 
   if (!post) {
     return (
-      <div className="space-y-6">
-        <section className="rounded-[28px] p-8" style={{ background: '#2B2C30' }}>
-          <Link href="/blog" className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-widest text-white/50 hover:text-white/80 mb-5">
-            ← BACK TO BLOG
+      <div>
+        <div className="py-8 border-b border-white/10 mb-8">
+          <Link href="/blog" className="text-[11px] font-bold uppercase tracking-widest text-white/40 hover:text-white/70 transition-colors">
+            ← Back to Insights
           </Link>
-          <h1 className="text-[32px] font-black uppercase text-white">Post not found</h1>
-          <p className="mt-3 text-sm text-white/60">This article doesn't exist or hasn't been published yet.</p>
-        </section>
+        </div>
+        <h1 className="text-2xl font-bold text-white">Post not found</h1>
+        <p className="mt-3 text-sm text-white/50">This article doesn't exist or hasn't been published yet.</p>
       </div>
     );
   }
 
+  const catStyle = categoryStyle(post.category);
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <section className="rounded-[28px] p-8" style={{ background: '#2B2C30' }}>
+    <div>
+      {/* Back nav */}
+      <div className="mb-8">
         <Link
           href="/blog"
-          className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-widest text-white/50 hover:text-white/80 mb-5 transition-colors"
+          className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-white/35 hover:text-white/65 transition-colors"
         >
-          ← BACK TO BLOG
+          ← Insights
         </Link>
+      </div>
 
-        <div className="flex flex-wrap items-center gap-2 mb-4">
-          {post.category && (
-            <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-[10px] font-semibold tracking-widest text-white/85 ring-1 ring-white/10">
-              {post.category.toUpperCase()}
-            </span>
-          )}
-        </div>
-
-        {post.mainImage && (
-          <div className="mb-6 overflow-hidden rounded-[18px]">
-            <img src={post.mainImage} alt={post.title} className="h-64 w-full object-cover" />
-          </div>
+      {/* Article header */}
+      <header className="mb-8 pb-8 border-b border-white/10">
+        {post.category && (
+          <span
+            className="inline-block text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded mb-4"
+            style={{ background: catStyle.bg, color: catStyle.text, border: `1px solid ${catStyle.border}` }}
+          >
+            {post.category}
+          </span>
         )}
 
-        <h1 className="text-[32px] font-black uppercase leading-[0.95] tracking-tight text-white sm:text-[44px]">
+        <h1 className="text-[28px] sm:text-[36px] font-bold leading-snug text-white">
           {post.title}
         </h1>
 
         {post.excerpt && (
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/60">{post.excerpt}</p>
+          <p className="mt-4 text-[15px] leading-relaxed text-white/50 max-w-2xl">{post.excerpt}</p>
         )}
 
-        <div className="mt-5 flex items-center gap-3 flex-wrap">
+        {/* Author row */}
+        <div className="mt-6 flex items-center gap-3">
           <div
-            className="grid h-10 w-10 place-items-center rounded-full text-[13px] font-black text-black"
+            className="h-9 w-9 rounded-full grid place-items-center text-[13px] font-black text-black shrink-0"
             style={{ background: 'linear-gradient(135deg, #F8B432, #E8342C)' }}
           >
             {post.author?.[0] ?? 'I'}
           </div>
           <div>
-            <div className="text-[12px] font-black uppercase tracking-wide text-white">{post.author ?? 'IndianSight'}</div>
-            <div className="text-[10px] text-white/40 uppercase tracking-widest">
+            <div className="text-[13px] font-semibold text-white/80">{post.author ?? 'IndianSight'}</div>
+            <div className="text-[11px] text-white/35">
               {post.publishedAt ? formatDate(post.publishedAt) : ''}
             </div>
           </div>
         </div>
-      </section>
+      </header>
 
-      {/* Content */}
-      <section className="rounded-[28px] bg-white/5 p-8 ring-1 ring-white/10">
-        <div className="max-w-2xl">
-          {post.body ? (
-            <PortableText value={post.body} components={ptComponents} />
-          ) : (
-            <p className="text-sm text-white/60">Content coming soon.</p>
-          )}
+      {/* Hero image */}
+      {post.mainImage && (
+        <div className="mb-8 overflow-hidden rounded-xl">
+          <img
+            src={post.mainImage}
+            alt={post.title}
+            className="w-full object-cover"
+            style={{ maxHeight: '440px' }}
+          />
         </div>
-      </section>
+      )}
+
+      {/* Article body */}
+      <article className="max-w-2xl">
+        {post.body ? (
+          <PortableText value={post.body} components={ptComponents} />
+        ) : (
+          <p className="text-sm text-white/50">Content coming soon.</p>
+        )}
+      </article>
 
       {/* Bottom nav */}
-      <div className="flex items-center justify-between gap-4 flex-wrap">
+      <div className="mt-12 pt-8 border-t border-white/10 flex items-center justify-between gap-4 flex-wrap">
         <Link
           href="/blog"
-          className="inline-flex items-center justify-center rounded-2xl bg-white/10 px-5 py-3 text-[11px] font-black uppercase tracking-widest text-white ring-1 ring-white/10 hover:bg-white/15 transition-colors"
+          className="inline-flex items-center gap-2 text-[12px] font-bold uppercase tracking-widest text-white/50 hover:text-white/80 transition-colors"
         >
           ← More Articles
         </Link>
         <Link
           href="/contact"
-          className="inline-flex items-center justify-center rounded-2xl bg-white px-5 py-3 text-[11px] font-black uppercase tracking-widest text-black hover:bg-white/90 transition-colors"
+          className="inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest text-black transition-opacity hover:opacity-90"
+          style={{ background: '#F47A35' }}
         >
           Talk to Our Team →
         </Link>

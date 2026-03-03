@@ -7,15 +7,39 @@ export const metadata = {
   description: "Insights on AI strategy, governance, and production readiness from IndianSight's consulting team.",
 };
 
-// Revalidate every hour
 export const revalidate = 3600;
 
-function BlogArrow() {
+const CAT_COLOR = {
+  strategy:    '#F47A35',
+  governance:  '#9B9EFF',
+  engineering: '#4ADE80',
+  research:    '#F87171',
+  product:     '#FCD34D',
+};
+function catColor(cat = '') {
+  return CAT_COLOR[cat?.toLowerCase()] ?? '#F47A35';
+}
+
+function CatLabel({ cat, size = 'sm' }) {
+  if (!cat) return null;
+  const color = catColor(cat);
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M7 17L17 7" stroke="rgba(255,255,255,0.9)" strokeWidth="2" strokeLinecap="round" />
-      <path d="M10 7h7v7" stroke="rgba(255,255,255,0.9)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <span
+      className={`font-bold uppercase tracking-widest ${size === 'xs' ? 'text-[9px]' : 'text-[10px]'}`}
+      style={{ color }}
+    >
+      {cat}
+    </span>
+  );
+}
+
+function Meta({ author, date }) {
+  return (
+    <p className="text-[11px] text-white/35 flex items-center gap-1.5 flex-wrap">
+      {author && <span className="text-white/50">{author}</span>}
+      {author && date && <span>·</span>}
+      {date && <span>{formatDate(date)}</span>}
+    </p>
   );
 }
 
@@ -27,155 +51,220 @@ export default async function BlogPage() {
     console.error('Sanity fetch failed:', e.message);
   }
 
+  // Split: hero = first, sidebar = next 4, grid = the rest
+  const [hero, ...remaining] = posts;
+  const sidebar = remaining.slice(0, 4);
+  const grid    = remaining.slice(4);
+
   if (!posts.length) {
     return (
-      <div className="space-y-6">
-        <section className="rounded-[28px] p-8" style={{ background: '#2B2C30' }}>
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-[10px] font-semibold tracking-widest text-white/85 ring-1 ring-white/10">
-            INSIGHTS & IDEAS
-          </div>
-          <h1 className="mt-4 text-[36px] font-black uppercase leading-[0.95] tracking-tight text-white sm:text-[48px]">
-            THE INDIAN
-            <br />
-            SIGHT BLOG
-          </h1>
-          <p className="mt-4 text-sm text-white/60">No posts published yet — check back soon.</p>
-        </section>
+      <div>
+        <Masthead />
+        <div className="mt-12 text-center py-16 text-white/30 text-sm">
+          No posts published yet — check back soon.
+        </div>
       </div>
     );
   }
 
-  const [featured, ...rest] = posts;
-
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <section className="rounded-[28px] p-8" style={{ background: '#2B2C30' }}>
-        <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-[10px] font-semibold tracking-widest text-white/85 ring-1 ring-white/10">
-          INSIGHTS & IDEAS
-        </div>
-        <h1 className="mt-4 text-[36px] font-black uppercase leading-[0.95] tracking-tight text-white sm:text-[48px]">
-          THE INDIAN
-          <br />
-          SIGHT BLOG
-        </h1>
-        <p className="mt-4 max-w-[520px] text-sm leading-relaxed text-white/60">
-          Deep dives, practical guides, and strategic thinking on AI from our consulting team.
-        </p>
+    <div>
+      <Masthead />
+
+      {/* ── Hero zone ─────────────────────────────────── */}
+      <section className="mt-7 flex flex-col lg:flex-row gap-0 border border-white/8 rounded-xl overflow-hidden">
+
+        {/* LEFT — Hero article */}
+        <Link
+          href={`/blog/${hero.slug}`}
+          className="group lg:w-[63%] flex flex-col border-b lg:border-b-0 lg:border-r border-white/8"
+          style={{ background: '#111214' }}
+        >
+          {hero.mainImage ? (
+            <div className="overflow-hidden" style={{ height: '230px' }}>
+              <img
+                src={hero.mainImage}
+                alt={hero.title}
+                className="w-full h-full object-cover transition duration-500 group-hover:scale-[1.02]"
+              />
+            </div>
+          ) : (
+            <div
+              className="flex items-center justify-center"
+              style={{ height: '200px', background: 'linear-gradient(135deg,rgba(244,122,53,.15),rgba(116,119,255,.1))' }}
+            >
+              <span className="text-7xl font-black text-white/5 uppercase">{hero.title?.[0] ?? 'I'}</span>
+            </div>
+          )}
+
+          <div className="p-6 flex flex-col flex-1 justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <CatLabel cat={hero.category} />
+                {hero.category && (
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-white/20">· Latest</span>
+                )}
+              </div>
+              <h2 className="text-[20px] sm:text-[24px] font-bold leading-snug text-white group-hover:text-white/80 transition-colors">
+                {hero.title}
+              </h2>
+              {hero.excerpt && (
+                <p className="mt-2 text-sm text-white/45 leading-relaxed line-clamp-2">{hero.excerpt}</p>
+              )}
+            </div>
+            <Meta author={hero.author} date={hero.publishedAt} />
+          </div>
+        </Link>
+
+        {/* RIGHT — Sidebar compact list */}
+        {sidebar.length > 0 && (
+          <div className="lg:w-[37%] flex flex-col divide-y divide-white/8" style={{ background: '#0f1012' }}>
+            {sidebar.map((post) => (
+              <SidebarItem key={post._id} post={post} />
+            ))}
+          </div>
+        )}
       </section>
 
-      {/* Featured post */}
-      <Link
-        href={`/blog/${featured.slug}`}
-        className="group relative overflow-hidden rounded-[28px] p-7 ring-1 ring-white/10 transition hover:bg-white/8 block"
-        style={{ background: 'rgba(244, 122, 53, 0.12)' }}
-      >
-        {featured.mainImage && (
-          <div className="mb-5 overflow-hidden rounded-[18px]">
-            <img
-              src={featured.mainImage}
-              alt={featured.title}
-              className="h-52 w-full object-cover transition group-hover:scale-[1.02]"
-            />
+      {/* ── More Articles grid ─────────────────────────── */}
+      {grid.length > 0 && (
+        <section className="mt-10">
+          <SectionHead>More Articles</SectionHead>
+          <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/8 border border-white/8 rounded-xl overflow-hidden">
+            {grid.map((post) => (
+              <GridCard key={post._id} post={post} />
+            ))}
           </div>
-        )}
-        <div className="flex flex-wrap items-center gap-2 mb-4">
-          {featured.category && (
-            <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-[10px] font-semibold tracking-widest text-white/85 ring-1 ring-white/10">
-              {featured.category.toUpperCase()}
-            </span>
-          )}
-          <span className="inline-flex items-center rounded-full bg-[#F47A35]/40 px-3 py-1 text-[10px] font-semibold tracking-widest text-white ring-1 ring-[#F47A35]/50">
-            FEATURED
-          </span>
-        </div>
-        <div className="text-[22px] font-black uppercase tracking-tight text-white sm:text-[28px]">
-          {featured.title}
-        </div>
-        {featured.excerpt && (
-          <p className="mt-2 max-w-2xl text-sm text-white/65 leading-relaxed">{featured.excerpt}</p>
-        )}
-        <div className="mt-4 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-[11px] text-white/50">
-            {featured.author && <span className="font-semibold text-white/70">{featured.author}</span>}
-            {featured.author && featured.publishedAt && <span>·</span>}
-            {featured.publishedAt && <span>{formatDate(featured.publishedAt)}</span>}
-          </div>
-          <div className="grid h-10 w-10 place-items-center rounded-2xl bg-white/10 ring-1 ring-white/10 transition group-hover:rotate-[6deg]">
-            <BlogArrow />
-          </div>
-        </div>
-      </Link>
-
-      {/* Post grid */}
-      {rest.length > 0 && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {rest.map((post) => (
-            <Link
-              key={post._id}
-              href={`/blog/${post.slug}`}
-              className="group relative overflow-hidden rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10 transition hover:-translate-y-0.5 hover:bg-white/8 block"
-            >
-              {post.mainImage && (
-                <div className="mb-4 overflow-hidden rounded-[14px]">
-                  <img
-                    src={post.mainImage}
-                    alt={post.title}
-                    className="h-36 w-full object-cover transition group-hover:scale-[1.02]"
-                  />
-                </div>
-              )}
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    {post.category && (
-                      <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-[10px] font-semibold tracking-widest text-white/85 ring-1 ring-white/10">
-                        {post.category.toUpperCase()}
-                      </span>
-                    )}
-                    {post.publishedAt && (
-                      <span className="text-[10px] font-semibold tracking-widest text-white/40">
-                        {formatDate(post.publishedAt)}
-                      </span>
-                    )}
-                  </div>
-                  <div className="mt-3 line-clamp-2 text-[13px] font-black uppercase tracking-wide text-white">
-                    {post.title}
-                  </div>
-                  {post.excerpt && (
-                    <p className="mt-2 line-clamp-3 text-sm text-white/60">{post.excerpt}</p>
-                  )}
-                </div>
-                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-white/10 ring-1 ring-white/10 transition group-hover:rotate-[6deg]">
-                  <BlogArrow />
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+        </section>
       )}
 
-      {/* Newsletter */}
-      <section className="rounded-[28px] bg-white/5 p-6 ring-1 ring-white/10 text-center">
-        <div className="text-[10px] font-semibold uppercase tracking-widest text-white/50 mb-2">Newsletter</div>
-        <div className="text-2xl font-black uppercase tracking-tight text-white mb-2">Stay Ahead of the AI Curve</div>
-        <p className="text-sm text-white/60 max-w-md mx-auto mb-5">
-          Get our best AI insights delivered to your inbox every two weeks. No spam, unsubscribe anytime.
+      {/* ── Newsletter ────────────────────────────────── */}
+      <section
+        className="mt-10 border border-white/8 rounded-xl px-8 py-10 text-center"
+        style={{ background: '#111214' }}
+      >
+        <CatLabel cat="Newsletter" />
+        <h3 className="mt-2 text-[22px] font-bold text-white">Stay ahead of the AI curve</h3>
+        <p className="mt-2 text-sm text-white/45 max-w-sm mx-auto mb-6">
+          Best AI insights delivered every two weeks. No spam, unsubscribe anytime.
         </p>
         <form className="flex gap-3 max-w-sm mx-auto flex-wrap justify-center">
           <input
             type="email"
             placeholder="Your work email"
-            className="flex-1 min-w-[200px] rounded-2xl bg-white/10 px-4 py-3 text-sm text-white placeholder-white/40 ring-1 ring-white/20 outline-none focus:ring-white/40"
+            className="flex-1 min-w-[180px] rounded-lg bg-white/6 px-4 py-2.5 text-sm text-white placeholder-white/25 ring-1 ring-white/12 outline-none focus:ring-white/30 transition"
           />
           <button
             type="submit"
-            className="rounded-2xl bg-white px-5 py-3 text-[11px] font-black uppercase tracking-widest text-black hover:bg-white/90 transition-colors"
+            className="rounded-lg px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest text-black hover:opacity-90 transition"
+            style={{ background: '#F47A35' }}
           >
             Subscribe
           </button>
         </form>
       </section>
     </div>
+  );
+}
+
+/* ─── Sub-components ──────────────────────────────────── */
+
+function Masthead() {
+  return (
+    <header className="pb-5 border-b border-white/10">
+      <div className="flex items-end justify-between gap-4 flex-wrap">
+        <div>
+          <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/25 mb-1">IndianSight</p>
+          <h1 className="text-[40px] sm:text-[52px] font-black leading-none tracking-tight text-white">
+            Insights
+          </h1>
+        </div>
+        <p className="text-sm text-white/40 max-w-[260px] leading-relaxed">
+          AI strategy, governance &amp; production readiness — from our team.
+        </p>
+      </div>
+    </header>
+  );
+}
+
+function SectionHead({ children }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#F47A35' }}>
+        {children}
+      </span>
+      <div className="flex-1 h-px bg-white/8" />
+    </div>
+  );
+}
+
+function SidebarItem({ post }) {
+  return (
+    <Link
+      href={`/blog/${post.slug}`}
+      className="group flex items-start gap-3 p-4 hover:bg-white/3 transition-colors"
+    >
+      {/* Small thumbnail */}
+      {post.mainImage ? (
+        <div className="shrink-0 overflow-hidden rounded-md" style={{ width: '76px', height: '56px' }}>
+          <img
+            src={post.mainImage}
+            alt={post.title}
+            className="w-full h-full object-cover transition duration-300 group-hover:scale-[1.06]"
+          />
+        </div>
+      ) : (
+        <div
+          className="shrink-0 rounded-md flex items-center justify-center"
+          style={{ width: '76px', height: '56px', background: 'rgba(244,122,53,0.08)' }}
+        >
+          <span className="text-lg font-black text-white/10 uppercase">{post.title?.[0] ?? 'I'}</span>
+        </div>
+      )}
+
+      {/* Text */}
+      <div className="min-w-0 flex flex-col gap-1">
+        <CatLabel cat={post.category} size="xs" />
+        <h3 className="text-[13px] font-semibold text-white leading-snug line-clamp-2 group-hover:text-white/75 transition-colors">
+          {post.title}
+        </h3>
+        <Meta date={post.publishedAt} />
+      </div>
+    </Link>
+  );
+}
+
+function GridCard({ post }) {
+  return (
+    <Link
+      href={`/blog/${post.slug}`}
+      className="group flex flex-col p-5 hover:bg-white/3 transition-colors"
+      style={{ background: '#111214' }}
+    >
+      {post.mainImage ? (
+        <div className="overflow-hidden rounded-lg mb-3" style={{ height: '130px' }}>
+          <img
+            src={post.mainImage}
+            alt={post.title}
+            className="w-full h-full object-cover transition duration-400 group-hover:scale-[1.04]"
+          />
+        </div>
+      ) : (
+        <div
+          className="rounded-lg mb-3 flex items-center justify-center"
+          style={{ height: '130px', background: 'rgba(244,122,53,0.07)' }}
+        />
+      )}
+      <CatLabel cat={post.category} size="xs" />
+      <h3 className="mt-1.5 text-[14px] font-semibold text-white leading-snug line-clamp-2 group-hover:text-white/80 transition-colors">
+        {post.title}
+      </h3>
+      {post.excerpt && (
+        <p className="mt-1.5 text-[12px] text-white/40 leading-relaxed line-clamp-2">{post.excerpt}</p>
+      )}
+      <div className="mt-3">
+        <Meta author={post.author} date={post.publishedAt} />
+      </div>
+    </Link>
   );
 }

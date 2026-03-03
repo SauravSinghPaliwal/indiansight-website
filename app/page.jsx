@@ -227,25 +227,43 @@ function BlogArrow() {
   );
 }
 
-function BlogCard({ title, excerpt, meta, tag, href = '/blog' }) {
+function BlogCard({ title, excerpt, meta, tag, href = '/blog', image }) {
   return (
     <Link
       href={href}
-      className="group relative overflow-hidden rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10 transition hover:-translate-y-0.5 hover:bg-white/8 block"
+      className="group relative overflow-hidden rounded-[22px] bg-white/5 ring-1 ring-white/10 transition hover:-translate-y-0.5 hover:bg-white/8 block"
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-[10px] font-semibold tracking-widest text-white/75 ring-1 ring-white/10">
-              {tag}
-            </span>
-            <span className="text-[10px] font-semibold tracking-widest text-white/40">{meta}</span>
-          </div>
-          <div className="mt-3 line-clamp-2 text-[13px] font-black uppercase tracking-wide text-white">{title}</div>
-          <p className="mt-2 line-clamp-3 text-sm text-white/60">{excerpt}</p>
+      {/* Thumbnail */}
+      {image ? (
+        <div className="overflow-hidden rounded-t-[22px]" style={{ height: '130px' }}>
+          <img
+            src={image}
+            alt={title}
+            className="w-full h-full object-cover transition duration-500 group-hover:scale-[1.04]"
+          />
         </div>
-        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-white/10 ring-1 ring-white/10 transition group-hover:rotate-[6deg]">
-          <BlogArrow />
+      ) : (
+        <div
+          className="rounded-t-[22px]"
+          style={{ height: '90px', background: 'linear-gradient(135deg, rgba(244,122,53,0.12), rgba(116,119,255,0.08))' }}
+        />
+      )}
+
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-[10px] font-semibold tracking-widest text-white/75 ring-1 ring-white/10">
+                {tag}
+              </span>
+              <span className="text-[10px] font-semibold tracking-widest text-white/40">{meta}</span>
+            </div>
+            <div className="mt-3 line-clamp-2 text-[13px] font-black uppercase tracking-wide text-white">{title}</div>
+            <p className="mt-2 line-clamp-2 text-sm text-white/60">{excerpt}</p>
+          </div>
+          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-white/10 ring-1 ring-white/10 transition group-hover:rotate-[6deg]">
+            <BlogArrow />
+          </div>
         </div>
       </div>
     </Link>
@@ -262,6 +280,7 @@ async function BlogSection() {
       title: p.title,
       excerpt: p.excerpt ?? '',
       href: `/blog/${p.slug}`,
+      image: p.mainImage ?? null,
     }));
   } catch {}
 
@@ -446,153 +465,56 @@ function ContactSection() {
 
 // ── Right panel (sticky sidebar) ──────────────────────────────────────────────
 
-function WhiteDoodleArrows() {
-  return (
-    <svg viewBox="0 0 120 120" className="h-14 w-14" fill="none" aria-hidden="true">
-      <path d="M30 60h40" stroke="white" strokeWidth="6" strokeLinecap="round" />
-      <path d="M58 42l18 18-18 18" stroke="white" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function PhoneMock() {
-  return (
-    <div className="relative mx-auto w-[280px] sm:w-[320px]">
-      <div className="relative rounded-[48px] bg-black p-[10px] shadow-[0_30px_100px_rgba(0,0,0,0.45)]">
-        <div className="rounded-[38px] bg-[#0B0B0E] p-4">
-          <div className="mx-auto mb-4 h-5 w-28 rounded-full bg-black/70" />
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="h-9 w-9 rounded-full" style={{ background: 'linear-gradient(135deg, #F8B432, #E8342C)' }} />
-              <div className="text-sm text-white/90 font-semibold">Consulting Dashboard</div>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="grid h-9 w-9 place-items-center rounded-full bg-white/70 text-[12px] text-black">📌</div>
-              <div className="grid h-9 w-9 place-items-center rounded-full bg-white/70 text-[12px] text-black">🔔</div>
-            </div>
-          </div>
-
-          <div className="mt-3 rounded-2xl bg-white/10 px-3 py-2 text-white/85">
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2">
-                <span className="grid h-7 w-7 place-items-center rounded-xl bg-white/10">🧩</span>
-                <span className="font-medium">AI Readiness</span>
-              </div>
-              <span className="grid h-7 w-7 place-items-center rounded-xl bg-white/10">▾</span>
-            </div>
-          </div>
-
-          <div className="mt-4 rounded-3xl bg-white/10 p-3 text-white">
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 grid h-11 w-11 place-items-center rounded-2xl text-black" style={{ background: '#F8B432' }}>🧠</div>
-              <div className="flex-1">
-                <div className="text-[13px] font-black uppercase tracking-wide">GENAI / RAG</div>
-                <div className="text-[16px] font-black uppercase leading-tight">GOVERNED DESIGN</div>
-                <div className="mt-1 text-xs text-white/80">
-                  Advisory on grounded answers, access controls, evaluation, and rollout.
-                </div>
-              </div>
-              <div className="grid h-10 w-10 place-items-center rounded-2xl bg-white/10">↗</div>
-            </div>
-          </div>
-
-          <div className="mt-4 overflow-hidden rounded-3xl p-4" style={{ background: '#F47A35' }}>
-            <div className="flex items-center justify-between">
-              <div className="text-white">
-                <div className="text-[18px] font-black uppercase leading-tight">ARCHITECTURE</div>
-                <div className="text-[18px] font-black uppercase leading-tight">& SCALE PLAN</div>
-              </div>
-              <div className="rounded-full bg-white/20 px-3 py-1 text-[11px] font-semibold text-white">policy-aware ▾</div>
-            </div>
-
-            <div className="mt-3 grid grid-cols-3 gap-2 text-[10px] text-white/90">
-              {[
-                { label: 'GOVERNANCE', sub: 'RBAC & controls' },
-                { label: 'MLOps', sub: 'Monitoring & drift' },
-                { label: 'INFRA', sub: 'On-prem / hybrid' },
-              ].map(({ label, sub }) => (
-                <div key={label} className="rounded-2xl bg-white/15 p-3 ring-1 ring-white/15">
-                  <div className="text-[11px] font-black uppercase">{label}</div>
-                  <div className="mt-1 text-[9px] text-white/80">{sub}</div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-4">
-              <svg viewBox="0 0 300 90" className="h-20 w-full" aria-hidden="true">
-                <path
-                  d="M0 70 C 30 40, 50 85, 80 58 S 130 35, 160 55 S 210 78, 240 50 S 280 45, 300 30 V 90 H 0 Z"
-                  fill="rgba(17,24,39,0.22)"
-                />
-                <path
-                  d="M0 70 C 30 40, 50 85, 80 58 S 130 35, 160 55 S 210 78, 240 50 S 280 45, 300 30"
-                  stroke="rgba(255,255,255,0.92)"
-                  strokeWidth="3"
-                  fill="none"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
-        <div className="pointer-events-none absolute inset-0 rounded-[48px] ring-1 ring-white/10" />
-      </div>
-    </div>
-  );
-}
-
-const rightStats = [
-  { label: 'Discovery', value: '1–2 wks' },
-  { label: 'Blueprint', value: '2–4 wks' },
-  { label: 'Pilot advisory', value: 'optional' },
-  { label: 'Scale plan', value: 'roadmap' },
+const phases = [
+  { num: '01', title: 'Discovery Sprint', duration: '1–2 wks', icon: '🔎', desc: 'Use-case prioritization, constraints mapping, data readiness, KPI definition.' },
+  { num: '02', title: 'Blueprint', duration: '2–4 wks', icon: '🧾', desc: 'Target architecture, governance controls, evaluation plan, and rollout path.' },
+  { num: '03', title: 'Pilot Advisory', duration: 'optional', icon: '🧪', desc: 'Guidance to execute a pilot with clear success criteria and risk controls.' },
+  { num: '04', title: 'Scale Readiness', duration: 'roadmap', icon: '📈', desc: 'Production checklist, monitoring plan, cost/perf tradeoffs, rollout strategy.' },
 ];
 
 const deliverables = [
-  'Prioritized use cases + success metrics (KPIs)',
-  'Target architecture & infra guidance (on-prem / cloud / hybrid)',
-  'Governance controls (RBAC, auditability, risk register)',
-  'Evaluation plan for quality, safety, and reliability',
-  'Scale readiness checklist (monitoring, drift, cost controls)',
+  { title: 'Use-case prioritization', desc: 'Ranked AI use cases with success metrics and effort/value mapping.' },
+  { title: 'Target architecture', desc: 'Infra guidance for on-prem, cloud, or hybrid — with cost and security tradeoffs.' },
+  { title: 'Governance controls', desc: 'RBAC guidance, auditability, vendor-risk inputs, and responsible AI controls.' },
+  { title: 'Evaluation plan', desc: 'Quality, safety, and reliability assessment for models and pipelines.' },
+  { title: 'Scale readiness checklist', desc: 'Monitoring, drift planning, incident playbooks, and lifecycle updates.' },
 ];
 
 function RightPanel() {
   return (
-    <div
-      className="relative overflow-hidden rounded-[28px] p-6"
-      style={{ background: 'linear-gradient(160deg, #F8B432 0%, #F47A35 45%, #E8342C 100%)' }}
-    >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.18),transparent_50%),radial-gradient(circle_at_80%_80%,rgba(0,0,0,0.15),transparent_50%)]" />
+    <div className="space-y-6">
 
-      <div className="relative space-y-4">
-        {/* Discovery Sprint card */}
-        <div className="rounded-[28px] bg-black/30 p-6 ring-1 ring-white/15 shadow-[0_22px_70px_rgba(0,0,0,0.35)] backdrop-blur-sm">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="text-[10px] font-semibold uppercase tracking-widest text-white/70">Start here</div>
-            <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-[10px] font-semibold tracking-widest text-white ring-1 ring-white/15">
-              CONSULTING-FIRST
-            </span>
-          </div>
+      {/* ── What we advise on ── */}
+      <ServiceGrid />
 
-          <div className="mt-3 font-black uppercase tracking-tight text-white" style={{ fontSize: 'var(--display-sm)' }}>
+      {/* ── Discovery Sprint (mirrors HeroCard style) ── */}
+      <section
+        className="relative overflow-hidden rounded-[28px] p-8 shadow-[0_26px_70px_rgba(0,0,0,0.45)]"
+        style={{ background: '#1E1F24' }}
+      >
+        <div
+          className="pointer-events-none absolute -top-20 -right-20 h-72 w-72 rounded-full opacity-20 blur-[80px]"
+          style={{ background: 'radial-gradient(circle, #F47A35, transparent 70%)' }}
+        />
+        <div className="relative">
+          <div className="text-[10px] font-semibold uppercase tracking-widest text-white/50">Start here</div>
+          <div className="mt-2 font-black uppercase tracking-tight text-white" style={{ fontSize: 'var(--display-sm)' }}>
             Discovery Sprint
           </div>
-          <p className="mt-2 text-sm leading-relaxed text-white/75">
-            Get clarity fast: use-case prioritization, constraints, governance inputs, and an
-            infrastructure-aware plan that can scale.
+          <p className="mt-2 text-sm leading-relaxed text-white/60">
+            Get clarity fast: use-case prioritization, governance inputs, and an infrastructure-aware plan that scales.
           </p>
 
-          <div className="mt-4 grid grid-cols-2 gap-3">
-            {rightStats.map((s) => (
-              <div key={s.label} className="rounded-2xl bg-white/12 p-4 ring-1 ring-white/15">
-                <div className="text-[10px] font-semibold uppercase tracking-widest text-white/60">{s.label}</div>
-                <div className="mt-1 text-[14px] font-black uppercase tracking-wide text-white">{s.value}</div>
+          <div className="mt-5 grid grid-cols-2 gap-3">
+            {phases.map((p) => (
+              <div key={p.num} className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
+                <div className="text-[10px] font-semibold uppercase tracking-widest text-white/40">{p.title}</div>
+                <div className="mt-1 text-[14px] font-black uppercase tracking-wide text-white">{p.duration}</div>
               </div>
             ))}
           </div>
 
-          <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/contact"
               className="inline-flex items-center justify-center rounded-2xl bg-white px-5 py-3 text-[11px] font-black uppercase tracking-widest text-black hover:bg-white/90 transition-colors"
@@ -601,47 +523,66 @@ function RightPanel() {
             </Link>
             <Link
               href="/#approach"
-              className="inline-flex items-center justify-center rounded-2xl bg-white/15 px-5 py-3 text-[11px] font-black uppercase tracking-widest text-white ring-1 ring-white/15 hover:bg-white/20 transition-colors"
+              className="inline-flex items-center justify-center rounded-2xl bg-white/10 px-5 py-3 text-[11px] font-black uppercase tracking-widest text-white ring-1 ring-white/10 hover:bg-white/15 transition-colors"
             >
-              See the approach
+              Our approach
             </Link>
           </div>
         </div>
+        <div className="pointer-events-none absolute inset-0 rounded-[28px] ring-1 ring-white/8" />
+      </section>
 
-        {/* Phone mock */}
-        <div className="relative grid place-items-center py-2">
-          <div className="absolute left-2 top-1/2 hidden -translate-y-1/2 lg:block">
-            <WhiteDoodleArrows />
-          </div>
-          <div className="absolute right-2 top-1/2 hidden -translate-y-1/2 scale-x-[-1] lg:block">
-            <WhiteDoodleArrows />
-          </div>
-          <PhoneMock />
+      {/* ── Engagement phases (mirrors Approach style) ── */}
+      <section className="rounded-[28px] bg-white/5 p-6 ring-1 ring-white/10">
+        <SectionHeader
+          kicker="Engagement model"
+          title="How we work"
+          desc="A pragmatic consulting approach that reduces risk and accelerates outcomes."
+        />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {phases.map((p, i) => (
+            <div key={p.num} className="rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10">
+              <div className="flex items-start gap-3">
+                <div className="grid h-11 w-11 place-items-center rounded-2xl bg-white/10 text-xl shrink-0">{p.icon}</div>
+                <div>
+                  <div className="text-[10px] font-semibold tracking-widest text-white/40 mb-1">{p.num}</div>
+                  <div className="text-[12px] font-black uppercase tracking-wide text-white">{p.title}</div>
+                  <p className="mt-1 text-sm text-white/60">{p.desc}</p>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
+      </section>
 
-        {/* Deliverables */}
-        <div className="rounded-[28px] bg-black/30 p-6 ring-1 ring-white/15 backdrop-blur-sm">
-          <div className="text-[10px] font-semibold uppercase tracking-widest text-white/70">Typical deliverables</div>
-          <ul className="mt-3 space-y-2 text-sm text-white/75">
-            {deliverables.map((d) => (
-              <li key={d} className="flex gap-2">
-                <span className="mt-0.5 text-white/90">✓</span>
-                <span className="leading-relaxed">{d}</span>
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-4 rounded-2xl bg-white/12 p-4 ring-1 ring-white/15">
-            <div className="text-[11px] font-black uppercase tracking-widest text-white">Execution support (later phase)</div>
-            <p className="mt-1 text-sm text-white/70">
-              We stay consulting-led. If needed, we guide pilot implementation and scale-out with your
-              internal team or preferred partners.
-            </p>
-          </div>
+      {/* ── Deliverables (mirrors ServiceGrid style) ── */}
+      <section className="rounded-[28px] p-6 ring-1 ring-white/10" style={{ background: '#1E2028' }}>
+        <SectionHeader
+          kicker="What you get"
+          title="Deliverables"
+          desc="Consulting-first outputs designed to de-risk adoption and make AI initiatives production-ready."
+        />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {deliverables.map((d) => (
+            <div key={d.title} className="rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10 hover:bg-white/8 transition-colors">
+              <div
+                className="mb-1 h-[2px] w-8 rounded-full"
+                style={{ background: 'linear-gradient(90deg, #F8B432, #E8342C)' }}
+              />
+              <div className="text-[12px] font-black uppercase tracking-wide text-white">{d.title}</div>
+              <p className="mt-2 text-sm text-white/60">{d.desc}</p>
+            </div>
+          ))}
         </div>
-      </div>
+        <div className="mt-5 rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
+          <div className="text-[11px] font-black uppercase tracking-widest text-white">Execution support (optional)</div>
+          <p className="mt-1 text-sm text-white/55">
+            When required, we can support pilot execution and scale planning with your internal team or preferred partners.
+            Our positioning remains consulting-first.
+          </p>
+        </div>
+      </section>
 
-      <div className="pointer-events-none absolute inset-0 rounded-[28px] ring-1 ring-white/15" />
     </div>
   );
 }
@@ -685,10 +626,6 @@ export default async function HomePage() {
         </RevealSection>
 
         <RevealSection>
-          <ServiceGrid />
-        </RevealSection>
-
-        <RevealSection>
           <Approach />
         </RevealSection>
 
@@ -702,10 +639,8 @@ export default async function HomePage() {
       </div>
 
       {/* Right column — sticky panel */}
-      <div className="h-fit lg:sticky lg:top-20">
-        <RevealSection>
-          <RightPanel />
-        </RevealSection>
+      <div className="lg:sticky lg:top-20 lg:self-start">
+        <RightPanel />
       </div>
     </div>
   );
