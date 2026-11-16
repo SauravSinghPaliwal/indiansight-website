@@ -5,7 +5,7 @@ import { SITE_URL } from '../lib/site';
 export const revalidate = 3600;
 
 export default async function sitemap() {
-  const pages = ['', '/about', '/gallery', '/blog', '/contact'].map((path) => ({
+  const pages = ['', '/about', '/blog', '/contact'].map((path) => ({
     url: `${SITE_URL}${path}`,
   }));
 
