@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { PortableText } from '@portabletext/react';
 import { client, formatDate } from '../../../lib/sanity';
 import { postBySlugQuery, allSlugsQuery } from '../../../lib/queries';
@@ -18,9 +19,23 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   try {
     const post = await client.fetch(postBySlugQuery, { slug });
-    if (post) return { title: `${post.title} — IndianSight Blog` };
+    if (post) {
+      const title = `${post.title?.trim()} — IndianSight Blog`;
+      return {
+        title,
+        description: post.excerpt || undefined,
+        alternates: { canonical: `/blog/${slug}` },
+        openGraph: {
+          title,
+          description: post.excerpt || undefined,
+          type: 'article',
+          url: `/blog/${slug}`,
+          images: post.mainImage ? [post.mainImage] : ['/logo.png'],
+        },
+      };
+    }
   } catch {}
-  return { title: 'Blog — IndianSight' };
+  return { title: 'Post not found — IndianSight' };
 }
 
 const CATEGORY_COLORS = {
@@ -110,19 +125,7 @@ export default async function BlogPostPage({ params }) {
     console.error('Sanity fetch error:', e.message);
   }
 
-  if (!post) {
-    return (
-      <div>
-        <div className="py-8 border-b border-white/10 mb-8">
-          <Link href="/blog" className="text-[11px] font-bold uppercase tracking-widest text-white/40 hover:text-white/70 transition-colors">
-            ← Back to Insights
-          </Link>
-        </div>
-        <h1 className="text-2xl font-bold text-white">Post not found</h1>
-        <p className="mt-3 text-sm text-white/50">This article doesn't exist or hasn't been published yet.</p>
-      </div>
-    );
-  }
+  if (!post) notFound();
 
   const catStyle = categoryStyle(post.category);
 

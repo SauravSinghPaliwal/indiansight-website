@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import Link from 'next/link';
+import { CONTACT_EMAIL } from '../../lib/site';
 
 const services = [
   'AI Strategy & Roadmap',
@@ -33,6 +33,25 @@ const faq = [
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+
+  // There is no backend mail service, so hand the message to the visitor's
+  // email app, addressed to us, rather than silently discarding it.
+  function handleSubmit(e) {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    const get = (k) => String(data.get(k) ?? '').trim();
+    const subject = `Enquiry from ${get('firstName')} ${get('lastName')} (${get('company')})`;
+    const body = [
+      `Name: ${get('firstName')} ${get('lastName')}`,
+      `Work email: ${get('email')}`,
+      `Company: ${get('company')}`,
+      `Service of interest: ${get('service') || 'Not specified'}`,
+      '',
+      get('message'),
+    ].join('\r\n');
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setSubmitted(true);
+  }
 
   return (
     <div className="space-y-6">
@@ -89,32 +108,36 @@ export default function ContactPage() {
         <div>
           {submitted ? (
             <div className="rounded-[28px] bg-white/5 p-8 ring-1 ring-white/10 text-center">
-              <div className="text-5xl mb-4">🎉</div>
-              <div className="text-2xl font-black uppercase tracking-tight text-white mb-2">Message Received!</div>
+              <div className="text-5xl mb-4">✉️</div>
+              <div className="text-2xl font-black uppercase tracking-tight text-white mb-2">Almost done</div>
               <p className="text-sm text-white/70 max-w-sm mx-auto">
-                Thank you for reaching out. One of our consultants will review your message and get
-                back to you within one business day.
+                Your email app should have opened with your message ready — press send there to
+                reach us. If nothing opened, email us directly at{' '}
+                <a href={`mailto:${CONTACT_EMAIL}`} className="text-white underline">{CONTACT_EMAIL}</a>.
               </p>
               <button
                 onClick={() => setSubmitted(false)}
                 className="mt-6 inline-flex items-center justify-center rounded-2xl bg-white/10 px-5 py-3 text-[11px] font-black uppercase tracking-widest text-white ring-1 ring-white/10 hover:bg-white/15"
               >
-                Send Another Message
+                Back to the form
               </button>
             </div>
           ) : (
             <form
               className="rounded-[28px] bg-white/5 p-6 ring-1 ring-white/10 space-y-4"
-              onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}
+              onSubmit={handleSubmit}
             >
               <div className="text-[12px] font-black uppercase tracking-wide text-white mb-2">Send Us a Message</div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-2">
-                    First Name *
-                  </label>
-                  <input
+                  <label htmlFor="contact-firstName" className="block text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-2">
+                  First Name *
+                </label>
+                <input
+                  id="contact-firstName"
+                  name="firstName"
+                  autoComplete="given-name"
                     type="text"
                     required
                     placeholder="Rajesh"
@@ -122,10 +145,13 @@ export default function ContactPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-2">
-                    Last Name *
-                  </label>
-                  <input
+                  <label htmlFor="contact-lastName" className="block text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-2">
+                  Last Name *
+                </label>
+                <input
+                  id="contact-lastName"
+                  name="lastName"
+                  autoComplete="family-name"
                     type="text"
                     required
                     placeholder="Kumar"
@@ -135,10 +161,13 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label className="block text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-2">
+                <label htmlFor="contact-email" className="block text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-2">
                   Work Email *
                 </label>
                 <input
+                  id="contact-email"
+                  name="email"
+                  autoComplete="email"
                   type="email"
                   required
                   placeholder="rajesh@company.com"
@@ -147,10 +176,13 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label className="block text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-2">
+                <label htmlFor="contact-company" className="block text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-2">
                   Company *
                 </label>
                 <input
+                  id="contact-company"
+                  name="company"
+                  autoComplete="organization"
                   type="text"
                   required
                   placeholder="Acme Corp"
@@ -159,10 +191,12 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label className="block text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-2">
+                <label htmlFor="contact-service" className="block text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-2">
                   Service of Interest
                 </label>
                 <select
+                  id="contact-service"
+                  name="service"
                   className="w-full rounded-2xl bg-white/10 px-4 py-3 text-sm text-white ring-1 ring-white/20 outline-none focus:ring-white/50 appearance-none"
                   style={{ background: 'rgba(255,255,255,0.07)' }}
                 >
@@ -174,10 +208,12 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label className="block text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-2">
+                <label htmlFor="contact-message" className="block text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-2">
                   Tell us about your project *
                 </label>
                 <textarea
+                  id="contact-message"
+                  name="message"
                   required
                   rows={4}
                   placeholder="Describe your business challenge, the data you have, and the outcome you're looking for..."

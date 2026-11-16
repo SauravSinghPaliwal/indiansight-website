@@ -1,11 +1,30 @@
 import './globals.css';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import { SITE_URL } from '../lib/site';
+
+const description =
+  'Indian Sight is a consulting-first AI firm. We help leadership and technical teams prioritize use cases, define governance, and design infrastructure-aware architectures.';
 
 export const metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'IndianSight — Consulting-First AI',
-  description:
-    'Indian Sight is a consulting-first AI firm. We help leadership and technical teams prioritize use cases, define governance, and design infrastructure-aware architectures.',
+  description,
+  openGraph: {
+    title: 'IndianSight — Consulting-First AI',
+    description,
+    url: SITE_URL,
+    siteName: 'IndianSight',
+    images: [{ url: '/logo.png', width: 500, height: 500, alt: 'IndianSight' }],
+    locale: 'en_IN',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'IndianSight — Consulting-First AI',
+    description,
+    images: ['/logo.png'],
+  },
 };
 
 export default function RootLayout({ children }) {

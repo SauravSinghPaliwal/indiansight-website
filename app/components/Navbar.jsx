@@ -81,6 +81,7 @@ export default function Navbar() {
             className="flex h-9 w-9 flex-col items-center justify-center gap-[5px] rounded-full border border-white/15 lg:hidden"
             onClick={() => setOpen(!open)}
             aria-label="Toggle menu"
+            aria-expanded={open}
           >
             <span className={`block h-[1.5px] w-4 bg-white rounded-full transition-all ${open ? 'translate-y-[6.5px] rotate-45' : ''}`} />
             <span className={`block h-[1.5px] w-4 bg-white rounded-full transition-all ${open ? 'opacity-0' : ''}`} />

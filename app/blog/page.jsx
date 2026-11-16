@@ -138,30 +138,23 @@ export default async function BlogPage() {
         </section>
       )}
 
-      {/* ── Newsletter ────────────────────────────────── */}
+      {/* ── Contact CTA ───────────────────────────────── */}
       <section
         className="mt-10 border border-white/8 rounded-xl px-8 py-10 text-center"
         style={{ background: '#111214' }}
       >
-        <CatLabel cat="Newsletter" />
-        <h3 className="mt-2 text-[22px] font-bold text-white">Stay ahead of the AI curve</h3>
+        <CatLabel cat="Stay in touch" />
+        <h3 className="mt-2 text-[22px] font-bold text-white">Want these tailored to your industry?</h3>
         <p className="mt-2 text-sm text-white/45 max-w-sm mx-auto mb-6">
-          Best AI insights delivered every two weeks. No spam, unsubscribe anytime.
+          Tell us what you&apos;re working on and we&apos;ll point you to the most relevant notes.
         </p>
-        <form className="flex gap-3 max-w-sm mx-auto flex-wrap justify-center">
-          <input
-            type="email"
-            placeholder="Your work email"
-            className="flex-1 min-w-[180px] rounded-lg bg-white/6 px-4 py-2.5 text-sm text-white placeholder-white/25 ring-1 ring-white/12 outline-none focus:ring-white/30 transition"
-          />
-          <button
-            type="submit"
-            className="rounded-lg px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest text-black hover:opacity-90 transition"
-            style={{ background: '#F47A35' }}
-          >
-            Subscribe
-          </button>
-        </form>
+        <Link
+          href="/contact"
+          className="inline-flex rounded-lg px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest text-black hover:opacity-90 transition"
+          style={{ background: '#F47A35' }}
+        >
+          Talk to our team →
+        </Link>
       </section>
     </div>
   );

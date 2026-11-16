@@ -3,6 +3,9 @@ import RevealSection from './components/RevealSection';
 import { client, formatDate } from '../lib/sanity';
 import { allPostsQuery } from '../lib/queries';
 
+// Refresh blog previews from Sanity hourly (matches /blog)
+export const revalidate = 3600;
+
 // ── Shared helpers ──────────────────────────────────────────────────────────
 
 function SectionHeader({ kicker, title, desc }) {
@@ -294,7 +297,7 @@ async function BlogSection() {
       {posts.length > 0 ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {posts.map((p) => (
-            <BlogCard key={p.title} {...p} />
+            <BlogCard key={p.href} {...p} />
           ))}
         </div>
       ) : (
@@ -466,10 +469,10 @@ function ContactSection() {
 // ── Right panel (sticky sidebar) ──────────────────────────────────────────────
 
 const phases = [
-  { num: '01', title: 'Discovery Sprint', duration: '1–2 wks', icon: '🔎', desc: 'Use-case prioritization, constraints mapping, data readiness, KPI definition.' },
-  { num: '02', title: 'Blueprint', duration: '2–4 wks', icon: '🧾', desc: 'Target architecture, governance controls, evaluation plan, and rollout path.' },
-  { num: '03', title: 'Pilot Advisory', duration: 'optional', icon: '🧪', desc: 'Guidance to execute a pilot with clear success criteria and risk controls.' },
-  { num: '04', title: 'Scale Readiness', duration: 'roadmap', icon: '📈', desc: 'Production checklist, monitoring plan, cost/perf tradeoffs, rollout strategy.' },
+  { num: '01', title: 'Discovery Sprint', duration: '1–2 wks' },
+  { num: '02', title: 'Blueprint', duration: '2–4 wks' },
+  { num: '03', title: 'Pilot Advisory', duration: 'optional' },
+  { num: '04', title: 'Scale Readiness', duration: 'roadmap' },
 ];
 
 const deliverables = [
@@ -532,29 +535,6 @@ function RightPanel() {
         <div className="pointer-events-none absolute inset-0 rounded-[28px] ring-1 ring-white/8" />
       </section>
 
-      {/* ── Engagement phases (mirrors Approach style) ── */}
-      <section className="rounded-[28px] bg-white/5 p-6 ring-1 ring-white/10">
-        <SectionHeader
-          kicker="Engagement model"
-          title="How we work"
-          desc="A pragmatic consulting approach that reduces risk and accelerates outcomes."
-        />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {phases.map((p, i) => (
-            <div key={p.num} className="rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10">
-              <div className="flex items-start gap-3">
-                <div className="grid h-11 w-11 place-items-center rounded-2xl bg-white/10 text-xl shrink-0">{p.icon}</div>
-                <div>
-                  <div className="text-[10px] font-semibold tracking-widest text-white/40 mb-1">{p.num}</div>
-                  <div className="text-[12px] font-black uppercase tracking-wide text-white">{p.title}</div>
-                  <p className="mt-1 text-sm text-white/60">{p.desc}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* ── Deliverables (mirrors ServiceGrid style) ── */}
       <section className="rounded-[28px] p-6 ring-1 ring-white/10" style={{ background: '#1E2028' }}>
         <SectionHeader
@@ -573,13 +553,6 @@ function RightPanel() {
               <p className="mt-2 text-sm text-white/60">{d.desc}</p>
             </div>
           ))}
-        </div>
-        <div className="mt-5 rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
-          <div className="text-[11px] font-black uppercase tracking-widest text-white">Execution support (optional)</div>
-          <p className="mt-1 text-sm text-white/55">
-            When required, we can support pilot execution and scale planning with your internal team or preferred partners.
-            Our positioning remains consulting-first.
-          </p>
         </div>
       </section>
 
