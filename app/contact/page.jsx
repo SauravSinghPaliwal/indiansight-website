@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { CONTACT_EMAIL } from '../../lib/site';
+import { CONTACT_EMAIL, CONTACT_PHONE, CONTACT_PHONE_DISPLAY } from '../../lib/site';
 
 const services = [
   'AI Strategy & Roadmap',
@@ -84,24 +84,20 @@ export default function ContactPage() {
             </p>
 
             {[
-              { icon: '📍', label: 'Headquarters', value: '5th Floor, Prestige Tech Park\nBengaluru, Karnataka 560103' },
-              { icon: '✉️', label: 'Email', value: 'business@indiansight.in' },
-              { icon: '🕐', label: 'Working Hours', value: 'Mon – Fri, 9 AM – 7 PM IST' },
-            ].map(({ icon, label, value }) => (
+              { icon: '📞', label: 'Phone', value: CONTACT_PHONE_DISPLAY, href: `tel:${CONTACT_PHONE}` },
+              { icon: '✉️', label: 'Email', value: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
+            ].map(({ icon, label, value, href }) => (
               <div key={label} className="flex items-start gap-4 mb-4">
                 <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/10 text-xl">{icon}</div>
                 <div>
                   <div className="text-[11px] font-black uppercase tracking-widest text-white">{label}</div>
-                  <p className="mt-0.5 text-sm text-white/60" style={{ whiteSpace: 'pre-line' }}>{value}</p>
+                  <a href={href} className="mt-0.5 block text-sm text-white/60 hover:text-white transition-colors">
+                    {value}
+                  </a>
                 </div>
               </div>
             ))}
           </section>
-
-          <div className="rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10">
-            <div className="text-[11px] font-black uppercase tracking-widest text-white mb-1">Also in</div>
-            <p className="text-sm text-white/60">Mumbai · Delhi NCR · Hyderabad · Chennai</p>
-          </div>
         </div>
 
         {/* Right — form */}
