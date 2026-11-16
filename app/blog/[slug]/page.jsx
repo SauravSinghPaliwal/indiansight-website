@@ -56,7 +56,7 @@ const ptComponents = {
       <p className="text-[15px] text-white/65 leading-[1.8] mb-5">{children}</p>
     ),
     h2: ({ children }) => (
-      <h2 className="text-[20px] font-bold text-white mt-10 mb-3 leading-snug">{children}</h2>
+      <h2 className="font-serif text-[30px] text-white mt-12 mb-3 leading-tight">{children}</h2>
     ),
     h3: ({ children }) => (
       <h3 className="text-[16px] font-semibold text-white mt-7 mb-2 leading-snug">{children}</h3>
@@ -130,7 +130,7 @@ export default async function BlogPostPage({ params }) {
   const catStyle = categoryStyle(post.category);
 
   return (
-    <div>
+    <div className="wrap page" style={{ maxWidth: '860px' }}>
       {/* Back nav */}
       <div className="mb-8">
         <Link
@@ -152,7 +152,7 @@ export default async function BlogPostPage({ params }) {
           </span>
         )}
 
-        <h1 className="text-[28px] sm:text-[36px] font-bold leading-snug text-white">
+        <h1 className="font-serif text-[40px] sm:text-[56px] leading-[1.05] tracking-[-0.01em] text-white">
           {post.title}
         </h1>
 
@@ -179,7 +179,7 @@ export default async function BlogPostPage({ params }) {
 
       {/* Hero image */}
       {post.mainImage && (
-        <div className="mb-8 overflow-hidden rounded-xl">
+        <div className="mb-10 overflow-hidden rounded-[24px] border border-white/10">
           <img
             src={post.mainImage}
             alt={post.title}
@@ -206,12 +206,8 @@ export default async function BlogPostPage({ params }) {
         >
           ← More Articles
         </Link>
-        <Link
-          href="/contact"
-          className="inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest text-black transition-opacity hover:opacity-90"
-          style={{ background: '#F47A35' }}
-        >
-          Talk to Our Team →
+        <Link href="/contact" className="btn btn-primary">
+          Talk to our team
         </Link>
       </div>
     </div>

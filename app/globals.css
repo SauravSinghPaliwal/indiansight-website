@@ -1,8 +1,30 @@
 @import "tailwindcss";
 
+/* ── Theme tokens ── */
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: var(--font-instrument), 'Iowan Old Style', 'Times New Roman', Georgia, serif;
+}
+
+:root {
+  --ink: #000000;          /* page background */
+  --panel: #0A0B0F;        /* raised surfaces */
+  --night: #0C1A3A;        /* night-sky blue */
+  --gold: #F8B432;         /* brand gold — sparks, accents */
+  --amber: #F47A35;        /* brand orange */
+  --line: rgba(255, 255, 255, 0.1);
+  --muted: rgba(255, 255, 255, 0.62);
+  --faint: rgba(255, 255, 255, 0.4);
+
+  --display-hero: clamp(3.4rem, 10vw, 8rem);
+  --display-lg: clamp(2.4rem, 5.4vw, 4.25rem);
+  --display-sm: clamp(1.75rem, 3.2vw, 2.5rem);
+}
+
 /* ── Base ── */
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
 }
 
 *, *::before, *::after {
@@ -10,21 +32,261 @@ html {
 }
 
 body {
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Fluid typography ── */
-:root {
-  --display-hero: clamp(2.8rem, 6vw, 5.5rem);
-  --display-lg: clamp(2rem, 4vw, 3.5rem);
-  --display-sm: clamp(1.5rem, 3vw, 2.5rem);
+::selection {
+  background: var(--gold);
+  color: #000;
 }
+
+@layer components {
+  /* ── Layout ── */
+  .wrap {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+  .page {
+    padding-top: 9rem;
+    padding-bottom: 5rem;
+  }
+  .section {
+    padding-block: 5rem;
+  }
+
+  /* ── Typography ── */
+  .h-hero {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: var(--display-hero);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: #fff;
+    text-wrap: balance;
+  }
+  .h-display {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: var(--display-lg);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    color: #fff;
+    text-wrap: balance;
+  }
+  .h-title {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: var(--display-sm);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: #fff;
+    text-wrap: balance;
+  }
+  /* The serif-italic accent word: "Pioneering <em>ideas</em>" */
+  .h-hero em,
+  .h-display em,
+  .h-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    letter-spacing: -0.01em;
+  }
+  .h-display em,
+  .h-title em {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 1.06em;
+  }
+  .kicker {
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    color: var(--faint);
+  }
+  .copy {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+  .numeral {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  /* ── Surfaces ── */
+  .glass {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 18px;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+  }
+  .scene-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #03050b;
+  }
+  .scene {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    border-radius: 999px;
+    padding: 0.7rem 1.4rem;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+  }
+  .btn:active {
+    transform: scale(0.97);
+  }
+  .btn-primary {
+    background: #fff;
+    color: #000;
+    border: 1px solid #fff;
+  }
+  .btn-primary:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+  .btn-outline {
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .btn-outline:hover {
+    background: #fff;
+    color: #000;
+    border-color: #fff;
+  }
+  .btn:focus-visible,
+  .field:focus-visible,
+  a:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+  }
+
+  /* Hero call-to-action shaped like the reference's input pill */
+  .cta-pill {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    max-width: 30rem;
+    padding: 0.45rem 0.45rem 0.45rem 1.5rem;
+    border-radius: 999px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.75);
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: border-color 0.25s ease, color 0.25s ease;
+  }
+  .cta-pill:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+    color: #fff;
+  }
+  .cta-pill-dot {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 999px;
+    background: #fff;
+    color: #000;
+    transition: background-color 0.25s ease, transform 0.25s ease;
+  }
+  .cta-pill:hover .cta-pill-dot {
+    background: var(--gold);
+    transform: translateX(2px);
+  }
+
+  /* ── Rows & lists ── */
+  .rule-list > * {
+    border-top: 1px solid var(--line);
+  }
+  .rule-list > *:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* ── Forms ── */
+  .label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--faint);
+  }
+  .field {
+    width: 100%;
+    border-radius: 14px;
+    padding: 0.8rem 1rem;
+    font-size: 14px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+  .field::placeholder {
+    color: rgba(255, 255, 255, 0.28);
+  }
+  .field:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+/* ── Scene artwork motion ── */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; }
+  50%      { opacity: 1; }
+}
+@keyframes drift-up {
+  from { transform: translateY(10px); opacity: 0.55; }
+  50%  { opacity: 1; }
+  to   { transform: translateY(-14px); opacity: 0.55; }
+}
+.twinkle-a { animation: twinkle 4.5s ease-in-out infinite; }
+.twinkle-b { animation: twinkle 6.5s ease-in-out 1.2s infinite; }
+.sparks-a  { animation: drift-up 7s ease-in-out infinite alternate; }
+.sparks-b  { animation: drift-up 9s ease-in-out 1.5s infinite alternate; }
 
 /* ── Scroll reveal ── */
 .reveal {
   opacity: 0;
   transform: translateY(28px);
-  transition: opacity 0.65s ease, transform 0.65s ease;
+  transition: opacity 0.8s ease, transform 0.8s ease;
 }
 .reveal.visible {
   opacity: 1;
@@ -44,22 +306,16 @@ body {
 .reveal-stagger.visible > *:nth-child(5) { opacity: 1; transform: none; transition-delay: 320ms; }
 .reveal-stagger.visible > *:nth-child(6) { opacity: 1; transform: none; transition-delay: 400ms; }
 
-/* ── Marquee ── */
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 35s linear infinite;
-}
-.marquee-track:hover {
-  animation-play-state: paused;
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .page { padding-top: 7.5rem; padding-bottom: 3.5rem; }
+  .section { padding-block: 3.5rem; }
+  .scene-card { border-radius: 22px; }
 }
 
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   .reveal, .reveal-stagger > * { opacity: 1; transform: none; transition: none; }
-  .marquee-track { animation: none; }
+  .twinkle-a, .twinkle-b, .sparks-a, .sparks-b { animation: none; }
 }

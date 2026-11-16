@@ -5,10 +5,10 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 const navItems = [
-  { label: 'SERVICES', href: '/#services' },
-  { label: 'APPROACH', href: '/#approach' },
-  { label: 'WHY US', href: '/about' },
-  { label: 'BLOG', href: '/blog' },
+  { label: 'Services', href: '/#services' },
+  { label: 'Approach', href: '/#approach' },
+  { label: 'About', href: '/about' },
+  { label: 'Blog', href: '/blog' },
 ];
 
 export default function Navbar() {
@@ -18,103 +18,97 @@ export default function Navbar() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Close the mobile menu whenever the route changes
+  useEffect(() => setOpen(false), [pathname]);
+
+  const isActive = (href) => !href.includes('#') && pathname.startsWith(href);
+
   return (
-    <header
-      className="sticky top-0 z-50 transition-all duration-300"
-      style={{
-        background: scrolled ? 'rgba(10,10,10,0.92)' : 'rgba(10,10,10,0.75)',
-        backdropFilter: 'blur(14px)',
-        WebkitBackdropFilter: 'blur(14px)',
-        borderBottom: '1px solid rgba(255,255,255,0.08)',
-      }}
-    >
-      <div className="mx-auto flex max-w-screen-2xl items-center justify-between gap-6 px-5 py-3 sm:px-8">
+    <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:pt-5">
+      <div
+        className="mx-auto max-w-[820px] rounded-[26px] border transition-colors duration-300"
+        style={{
+          background: scrolled || open ? 'rgba(6,8,14,0.82)' : 'rgba(6,8,14,0.35)',
+          borderColor: 'rgba(255,255,255,0.16)',
+          backdropFilter: 'blur(18px)',
+          WebkitBackdropFilter: 'blur(18px)',
+        }}
+      >
+        <div className="flex h-[52px] items-center justify-between gap-4 pl-3 pr-2">
+          {/* Brand */}
+          <Link href="/" className="flex shrink-0 items-center gap-2.5 rounded-full pr-2">
+            <span className="h-7 w-7 overflow-hidden rounded-full bg-white">
+              <Image src="/logo.png" alt="" width={28} height={28} className="h-full w-full object-cover" />
+            </span>
+            <span className="text-[14px] font-semibold tracking-tight text-white">IndianSight</span>
+          </Link>
 
-        {/* Brand */}
-        <Link href="/" className="flex items-center gap-3 shrink-0">
-          <div className="h-9 w-9 overflow-hidden rounded-full bg-white">
-            <Image src="/logo.png" alt="IndianSight" width={36} height={36} className="h-full w-full object-cover" />
+          {/* Desktop nav */}
+          <nav className="hidden items-center gap-7 text-[13px] md:flex" aria-label="Primary">
+            {navItems.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={`transition-colors hover:text-white ${isActive(item.href) ? 'text-white' : 'text-white/65'}`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Right CTAs */}
+          <div className="flex items-center gap-1.5">
+            <a
+              href="mailto:business@indiansight.in"
+              className="hidden rounded-full px-3 py-2 text-[13px] text-white/75 transition-colors hover:text-white md:inline-flex"
+            >
+              Email us
+            </a>
+            <Link href="/contact" className="btn btn-outline px-4 py-2">
+              Contact
+            </Link>
+
+            {/* Mobile burger */}
+            <button
+              className="flex h-9 w-9 flex-col items-center justify-center gap-[5px] rounded-full border border-white/20 md:hidden"
+              onClick={() => setOpen(!open)}
+              aria-label="Toggle menu"
+              aria-expanded={open}
+            >
+              <span className={`block h-[1.5px] w-4 rounded-full bg-white transition-all ${open ? 'translate-y-[6.5px] rotate-45' : ''}`} />
+              <span className={`block h-[1.5px] w-4 rounded-full bg-white transition-all ${open ? 'opacity-0' : ''}`} />
+              <span className={`block h-[1.5px] w-4 rounded-full bg-white transition-all ${open ? '-translate-y-[6.5px] -rotate-45' : ''}`} />
+            </button>
           </div>
-          <span className="text-[12px] font-black tracking-[0.22em] text-white">
-            INDIAN<span className="text-white/40 mx-1">—</span>SIGHT
-          </span>
-        </Link>
-
-        {/* Desktop nav */}
-        <nav className="hidden items-center gap-7 text-[10px] font-semibold tracking-widest text-white/60 lg:flex">
-          {navItems.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className={`transition-colors hover:text-white ${
-                pathname === item.href ? 'text-white' : ''
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        {/* Right CTAs */}
-        <div className="flex items-center gap-3">
-          <a
-            href="mailto:business@indiansight.in"
-            className="hidden items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-[10px] font-semibold tracking-widest text-white/70 transition hover:border-white/30 hover:text-white md:inline-flex"
-          >
-            EMAIL US
-          </a>
-          <Link
-            href="/contact"
-            className="rounded-full px-5 py-2 text-[10px] font-black tracking-widest text-black transition hover:opacity-90 active:scale-95"
-            style={{ background: 'linear-gradient(135deg, #F8B432 0%, #F47A35 50%, #E8342C 100%)' }}
-          >
-            CONTACT US
-          </Link>
-
-          {/* Mobile burger */}
-          <button
-            className="flex h-9 w-9 flex-col items-center justify-center gap-[5px] rounded-full border border-white/15 lg:hidden"
-            onClick={() => setOpen(!open)}
-            aria-label="Toggle menu"
-            aria-expanded={open}
-          >
-            <span className={`block h-[1.5px] w-4 bg-white rounded-full transition-all ${open ? 'translate-y-[6.5px] rotate-45' : ''}`} />
-            <span className={`block h-[1.5px] w-4 bg-white rounded-full transition-all ${open ? 'opacity-0' : ''}`} />
-            <span className={`block h-[1.5px] w-4 bg-white rounded-full transition-all ${open ? '-translate-y-[6.5px] -rotate-45' : ''}`} />
-          </button>
         </div>
-      </div>
 
-      {/* Mobile menu */}
-      {open && (
-        <nav
-          className="border-t px-5 pb-4 pt-3 lg:hidden"
-          style={{ borderColor: 'rgba(255,255,255,0.08)', background: 'rgba(10,10,10,0.97)' }}
-        >
-          {navItems.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              onClick={() => setOpen(false)}
-              className="block py-3 text-[11px] font-semibold tracking-widest text-white/70 hover:text-white transition-colors"
+        {/* Mobile menu */}
+        {open && (
+          <nav className="border-t border-white/10 px-4 pb-4 pt-2 md:hidden" aria-label="Mobile">
+            {navItems.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className="block py-3 text-[15px] text-white/75 transition-colors hover:text-white"
+              >
+                {item.label}
+              </Link>
+            ))}
+            <a
+              href="mailto:business@indiansight.in"
+              className="block py-3 text-[15px] text-white/75 transition-colors hover:text-white"
             >
-              {item.label}
-            </Link>
-          ))}
-          <Link
-            href="/contact"
-            onClick={() => setOpen(false)}
-            className="mt-3 inline-flex rounded-full px-5 py-2.5 text-[10px] font-black tracking-widest text-black"
-            style={{ background: 'linear-gradient(135deg, #F8B432 0%, #F47A35 50%, #E8342C 100%)' }}
-          >
-            CONTACT US
-          </Link>
-        </nav>
-      )}
+              Email us
+            </a>
+          </nav>
+        )}
+      </div>
     </header>
   );
 }

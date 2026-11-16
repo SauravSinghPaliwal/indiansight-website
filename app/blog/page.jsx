@@ -58,7 +58,7 @@ export default async function BlogPage() {
 
   if (!posts.length) {
     return (
-      <div>
+      <div className="wrap page">
         <Masthead />
         <div className="mt-12 text-center py-16 text-white/30 text-sm">
           No posts published yet — check back soon.
@@ -68,20 +68,20 @@ export default async function BlogPage() {
   }
 
   return (
-    <div>
+    <div className="wrap page">
       <Masthead />
 
       {/* ── Hero zone ─────────────────────────────────── */}
-      <section className="mt-7 flex flex-col lg:flex-row gap-0 border border-white/8 rounded-xl overflow-hidden">
+      <section className="mt-10 flex flex-col lg:flex-row gap-0 border border-white/10 rounded-[24px] overflow-hidden">
 
         {/* LEFT — Hero article */}
         <Link
           href={`/blog/${hero.slug}`}
           className="group lg:w-[63%] flex flex-col border-b lg:border-b-0 lg:border-r border-white/8"
-          style={{ background: '#111214' }}
+          style={{ background: '#0A0B0F' }}
         >
           {hero.mainImage ? (
-            <div className="overflow-hidden" style={{ height: '230px' }}>
+            <div className="overflow-hidden" style={{ height: '300px' }}>
               <img
                 src={hero.mainImage}
                 alt={hero.title}
@@ -105,7 +105,7 @@ export default async function BlogPage() {
                   <span className="text-[9px] font-bold uppercase tracking-widest text-white/20">· Latest</span>
                 )}
               </div>
-              <h2 className="text-[20px] sm:text-[24px] font-bold leading-snug text-white group-hover:text-white/80 transition-colors">
+              <h2 className="font-serif text-[28px] sm:text-[36px] leading-[1.1] text-white group-hover:text-white/80 transition-colors">
                 {hero.title}
               </h2>
               {hero.excerpt && (
@@ -118,7 +118,7 @@ export default async function BlogPage() {
 
         {/* RIGHT — Sidebar compact list */}
         {sidebar.length > 0 && (
-          <div className="lg:w-[37%] flex flex-col divide-y divide-white/8" style={{ background: '#0f1012' }}>
+          <div className="lg:w-[37%] flex flex-col divide-y divide-white/8" style={{ background: '#06070A' }}>
             {sidebar.map((post) => (
               <SidebarItem key={post._id} post={post} />
             ))}
@@ -130,7 +130,7 @@ export default async function BlogPage() {
       {grid.length > 0 && (
         <section className="mt-10">
           <SectionHead>More Articles</SectionHead>
-          <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/8 border border-white/8 rounded-xl overflow-hidden">
+          <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/8 border border-white/10 rounded-[24px] overflow-hidden">
             {grid.map((post) => (
               <GridCard key={post._id} post={post} />
             ))}
@@ -139,21 +139,16 @@ export default async function BlogPage() {
       )}
 
       {/* ── Contact CTA ───────────────────────────────── */}
-      <section
-        className="mt-10 border border-white/8 rounded-xl px-8 py-10 text-center"
-        style={{ background: '#111214' }}
-      >
-        <CatLabel cat="Stay in touch" />
-        <h3 className="mt-2 text-[22px] font-bold text-white">Want these tailored to your industry?</h3>
-        <p className="mt-2 text-sm text-white/45 max-w-sm mx-auto mb-6">
+      <section className="panel mt-16 px-6 py-14 text-center">
+        <div className="kicker">Stay in touch</div>
+        <h3 className="h-title mt-3">
+          Want these tailored <em>to your industry?</em>
+        </h3>
+        <p className="copy mx-auto mt-4 max-w-sm">
           Tell us what you&apos;re working on and we&apos;ll point you to the most relevant notes.
         </p>
-        <Link
-          href="/contact"
-          className="inline-flex rounded-lg px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest text-black hover:opacity-90 transition"
-          style={{ background: '#F47A35' }}
-        >
-          Talk to our team →
+        <Link href="/contact" className="btn btn-primary mt-7">
+          Talk to our team
         </Link>
       </section>
     </div>
@@ -164,15 +159,15 @@ export default async function BlogPage() {
 
 function Masthead() {
   return (
-    <header className="pb-5 border-b border-white/10">
+    <header className="pb-8 border-b border-white/10">
       <div className="flex items-end justify-between gap-4 flex-wrap">
         <div>
-          <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/25 mb-1">IndianSight</p>
-          <h1 className="text-[40px] sm:text-[52px] font-black leading-none tracking-tight text-white">
-            Insights
+          <p className="kicker mb-3">IndianSight</p>
+          <h1 className="h-hero" style={{ fontSize: 'clamp(3.2rem, 8vw, 6rem)' }}>
+            <em>Insights</em>
           </h1>
         </div>
-        <p className="text-sm text-white/40 max-w-[260px] leading-relaxed">
+        <p className="copy max-w-[280px] text-[14px]">
           AI strategy, governance &amp; production readiness — from our team.
         </p>
       </div>
@@ -183,9 +178,7 @@ function Masthead() {
 function SectionHead({ children }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#F47A35' }}>
-        {children}
-      </span>
+      <span className="kicker">{children}</span>
       <div className="flex-1 h-px bg-white/8" />
     </div>
   );
@@ -231,8 +224,8 @@ function GridCard({ post }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group flex flex-col p-5 hover:bg-white/3 transition-colors"
-      style={{ background: '#111214' }}
+      className="group flex flex-col p-5 transition-colors"
+      style={{ background: '#0A0B0F' }}
     >
       {post.mainImage ? (
         <div className="overflow-hidden rounded-lg mb-3" style={{ height: '130px' }}>
