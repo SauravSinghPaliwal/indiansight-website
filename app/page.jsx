@@ -1,324 +1,55 @@
 import Link from 'next/link';
 import RevealSection from './components/RevealSection';
+import { HeroScene, ValleyScene, ConstellationScene, HorizonScene } from './components/Scenes';
 import { client, formatDate } from '../lib/sanity';
 import { allPostsQuery } from '../lib/queries';
+import { CONTACT_EMAIL } from '../lib/site';
 
 // Refresh blog previews from Sanity hourly (matches /blog)
 export const revalidate = 3600;
 
-// ── Shared helpers ──────────────────────────────────────────────────────────
-
-function SectionHeader({ kicker, title, desc }) {
+function Arrow({ size = 16 }) {
   return (
-    <div className="mb-4">
-      <div className="text-[10px] font-semibold uppercase tracking-widest text-white/50">{kicker}</div>
-      <div className="mt-2 font-black uppercase tracking-tight text-white" style={{ fontSize: 'var(--display-sm)' }}>{title}</div>
-      {desc && <p className="mt-2 max-w-2xl text-sm text-white/60">{desc}</p>}
-    </div>
-  );
-}
-
-function Pill({ children }) {
-  return (
-    <span className="inline-flex items-center rounded-full bg-white/8 px-3 py-1 text-[10px] font-semibold tracking-widest text-white/75 ring-1 ring-white/10">
-      {children}
-    </span>
-  );
-}
-
-// ── Marquee strip ─────────────────────────────────────────────────────────────
-
-const marqueeItems = [
-  'AI STRATEGY', 'GENAI / RAG', 'GOVERNANCE', 'ARCHITECTURE ADVISORY',
-  'MLOPS READINESS', 'ENTERPRISE AI', 'DISCOVERY SPRINT', 'BLUEPRINT',
-  'SCALE READINESS', 'RESPONSIBLE AI', 'VENDOR NEUTRAL', 'CONSULTING-FIRST',
-];
-
-function MarqueeStrip() {
-  const items = [...marqueeItems, ...marqueeItems];
-  return (
-    <div
-      className="overflow-hidden rounded-[18px] py-3"
-      style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
-    >
-      <div className="marquee-track">
-        {items.map((item, i) => (
-          <span key={i} className="flex items-center gap-3 px-6 text-[10px] font-semibold tracking-widest text-white/40 whitespace-nowrap">
-            {item}
-            <span style={{ color: '#F47A35' }}>·</span>
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ── Hero card decorations ────────────────────────────────────────────────────
-
-function Scribble() {
-  return (
-    <svg viewBox="0 0 180 90" className="h-14 w-44" fill="none" aria-hidden="true">
-      <path
-        d="M10 58c26-26 38 10 68-18 26-24 34 10 60-12 18-15 26 3 32-6"
-        stroke="#F8B432"
-        strokeWidth="6"
-        strokeLinecap="round"
-      />
-      <path
-        d="M132 22l14-10m-2 22l18 6m-22 8l-16 12"
-        stroke="#F8B432"
-        strokeWidth="6"
-        strokeLinecap="round"
-      />
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
-  );
-}
-
-function Bullet({ title, desc }) {
-  return (
-    <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
-      <div className="text-[11px] font-black uppercase tracking-widest text-white">{title}</div>
-      <div className="mt-1 text-xs leading-relaxed text-white/65">{desc}</div>
-    </div>
   );
 }
 
 // ── Hero ─────────────────────────────────────────────────────────────────────
 
-function HeroCard() {
+function Hero() {
   return (
-    <section
-      id="ai-consulting"
-      className="relative overflow-hidden rounded-[28px] p-8 sm:p-10 shadow-[0_26px_70px_rgba(0,0,0,0.45)]"
-      style={{ background: '#1E1F24' }}
-    >
-      {/* Subtle gradient glow */}
-      <div
-        className="pointer-events-none absolute -top-20 -left-20 h-72 w-72 rounded-full opacity-20 blur-[80px]"
-        style={{ background: 'radial-gradient(circle, #F47A35, transparent 70%)' }}
-      />
+    <section id="ai-consulting" className="relative flex min-h-[100svh] flex-col overflow-hidden">
+      <HeroScene />
 
-      <div className="absolute right-8 top-16 hidden lg:block">
-        <Scribble />
-      </div>
-
-      <div className="relative max-w-[680px]">
-        <div className="inline-flex items-center gap-2 rounded-full bg-white/8 px-4 py-2 text-[10px] font-semibold tracking-widest text-white/75 ring-1 ring-white/10">
-          CONSULTING-FIRST AI
-          <span className="text-white/30">·</span>
-          ROADMAP · GOVERNANCE · ARCHITECTURE
-        </div>
-
-        <h1
-          className="mt-5 font-black uppercase leading-[0.9] tracking-tight text-white"
-          style={{ fontSize: 'var(--display-hero)' }}
-        >
-          MAKE AI
-          <br />
-          DECISIONS
-          <br />
-          <span style={{ background: 'linear-gradient(135deg, #F8B432, #F47A35, #E8342C)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-            THAT SCALE
-          </span>
+      {/* Bottom padding keeps the copy clear of the figure on the hill */}
+      <div className="wrap relative flex flex-col items-center pb-[max(22vw,32svh)] pt-32 text-center sm:pt-36">
+        <h1 className="h-hero" style={{ textShadow: '0 2px 30px rgba(0,0,0,0.45)' }}>
+          Make AI decisions <em>that scale</em>
         </h1>
 
-        <p className="mt-5 max-w-[520px] text-sm leading-relaxed text-white/60">
-          Built for India. Ready for the world. Indian Sight is a consulting-first AI firm helping
-          leadership and technical teams prioritize use cases, define governance, and design
-          infrastructure-aware architectures — so initiatives don&apos;t stall after the pilot.
+        <Link href="/contact" className="cta-pill mt-8">
+          <span>Tell us about your use case</span>
+          <span className="cta-pill-dot">
+            <Arrow />
+          </span>
+        </Link>
+
+        <p className="mt-5 max-w-[30rem] text-[13px] leading-relaxed text-white/85" style={{ textShadow: '0 1px 12px rgba(0,0,0,0.7)' }}>
+          Built for India. Ready for the world. A consulting-first AI firm helping teams prioritize
+          use cases, define governance, and design architectures that don&apos;t stall after the pilot.
         </p>
 
-        <div className="mt-5 flex flex-wrap gap-2">
-          <Pill>AI STRATEGY</Pill>
-          <Pill>GENAI / RAG ADVISORY</Pill>
-          <Pill>GOVERNANCE & RISK</Pill>
-          <Pill>ARCHITECTURE ADVISORY</Pill>
-          <Pill>MLOPS READINESS</Pill>
-        </div>
-
-        <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-          <Link
-            href="/#services"
-            className="group inline-flex items-center justify-between gap-4 rounded-2xl bg-white px-6 py-4 text-[12px] font-black uppercase tracking-widest text-black shadow-[0_16px_45px_rgba(0,0,0,0.28)] hover:shadow-[0_20px_55px_rgba(0,0,0,0.32)] transition-shadow"
-          >
-            <span>
-              <span className="block text-[10px] font-semibold tracking-widest text-black/40">INDIAN SIGHT</span>
-              CONSULTING SERVICES
-            </span>
-            <span className="grid h-11 w-11 place-items-center rounded-xl bg-black text-white transition group-hover:rotate-[-6deg]">
-              →
-            </span>
-          </Link>
-
-          <Link
-            href="/#approach"
-            className="group inline-flex flex-1 items-center justify-between gap-4 rounded-2xl bg-white/8 px-6 py-4 text-[12px] font-black uppercase tracking-widest text-white ring-1 ring-white/10 hover:bg-white/12 transition-colors"
-          >
-            <span>
-              <span className="block text-[10px] font-semibold tracking-widest text-white/45">HOW WE ENGAGE</span>
-              DISCOVERY → BLUEPRINT
-            </span>
-            <span className="grid h-11 w-11 place-items-center rounded-xl bg-white/10 text-white transition group-hover:rotate-[6deg]">
-              🧭
-            </span>
-          </Link>
-        </div>
-
-        <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <Bullet title="1) Discovery" desc="Use-case prioritization, constraints, data readiness, success metrics." />
-          <Bullet title="2) Blueprint" desc="Target architecture, governance controls, evaluation plan, rollout path." />
-          <Bullet title="3) Support" desc="Execution support when needed — pilot guidance, vendor coordination, scale readiness." />
-        </div>
-      </div>
-
-      <div className="pointer-events-none absolute inset-0 rounded-[28px] ring-1 ring-white/8" />
-    </section>
-  );
-}
-
-// ── Small cards (Services / Approach) ────────────────────────────────────────
-
-function TinyCharacters({ tone }) {
-  const hot = tone === 'services' ? '#F8B432' : '#E8342C';
-  const accent = '#111827';
-  return (
-    <svg viewBox="0 0 280 120" className="w-full" aria-hidden="true">
-      <rect x="18" y="54" width="72" height="54" rx="18" fill={accent} />
-      <circle cx="44" cy="80" r="12" fill={hot} />
-      <circle cx="64" cy="80" r="12" fill={hot} />
-      <rect x="110" y="46" width="80" height="62" rx="22" fill={accent} />
-      <rect x="126" y="62" width="52" height="12" rx="6" fill="#60A5FA" />
-      <rect x="126" y="82" width="64" height="12" rx="6" fill="#A78BFA" />
-      <circle cx="216" cy="76" r="26" fill={accent} />
-      <circle cx="208" cy="70" r="6" fill={hot} />
-      <circle cx="224" cy="70" r="6" fill={hot} />
-      <path d="M206 86c8 10 20 10 28 0" stroke={hot} strokeWidth="6" strokeLinecap="round" />
-      <path d="M238 52l10-8" stroke={accent} strokeWidth="6" strokeLinecap="round" />
-      <path d="M240 98l10 8" stroke={accent} strokeWidth="6" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function SmallCard({ tone, title, kicker, desc, href = '#' }) {
-  const bg = tone === 'services' ? '#E8342C' : '#F8B432';
-  return (
-    <Link
-      href={href}
-      className="group relative overflow-hidden rounded-[26px] p-6 shadow-[0_22px_62px_rgba(0,0,0,0.24)] transition hover:-translate-y-1 block"
-      style={{ background: bg }}
-    >
-      <div className="absolute right-5 top-5 grid h-11 w-11 place-items-center rounded-full bg-white/55 transition group-hover:rotate-12">↗</div>
-      <div className="text-[10px] font-semibold uppercase tracking-widest text-black/60">{kicker}</div>
-      <div className="mt-3 font-black uppercase tracking-tight text-black" style={{ fontSize: 'var(--display-sm)' }}>{title}</div>
-      <p className="mt-2 text-sm text-black/65">{desc}</p>
-      <div className="mt-4">
-        <TinyCharacters tone={tone} />
-      </div>
-      <div className="pointer-events-none absolute inset-0 ring-1 ring-black/10" />
-    </Link>
-  );
-}
-
-// ── Blog section ──────────────────────────────────────────────────────────────
-
-function BlogArrow() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M7 17L17 7" stroke="rgba(255,255,255,0.9)" strokeWidth="2" strokeLinecap="round" />
-      <path d="M10 7h7v7" stroke="rgba(255,255,255,0.9)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function BlogCard({ title, excerpt, meta, tag, href = '/blog', image }) {
-  return (
-    <Link
-      href={href}
-      className="group relative overflow-hidden rounded-[22px] bg-white/5 ring-1 ring-white/10 transition hover:-translate-y-0.5 hover:bg-white/8 block"
-    >
-      {/* Thumbnail */}
-      {image ? (
-        <div className="overflow-hidden rounded-t-[22px]" style={{ height: '130px' }}>
-          <img
-            src={image}
-            alt={title}
-            className="w-full h-full object-cover transition duration-500 group-hover:scale-[1.04]"
-          />
-        </div>
-      ) : (
-        <div
-          className="rounded-t-[22px]"
-          style={{ height: '90px', background: 'linear-gradient(135deg, rgba(244,122,53,0.12), rgba(116,119,255,0.08))' }}
-        />
-      )}
-
-      <div className="p-5">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-[10px] font-semibold tracking-widest text-white/75 ring-1 ring-white/10">
-                {tag}
-              </span>
-              <span className="text-[10px] font-semibold tracking-widest text-white/40">{meta}</span>
-            </div>
-            <div className="mt-3 line-clamp-2 text-[13px] font-black uppercase tracking-wide text-white">{title}</div>
-            <p className="mt-2 line-clamp-2 text-sm text-white/60">{excerpt}</p>
-          </div>
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-white/10 ring-1 ring-white/10 transition group-hover:rotate-[6deg]">
-            <BlogArrow />
-          </div>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
-async function BlogSection() {
-  let posts = [];
-  try {
-    const raw = await client.fetch(allPostsQuery);
-    posts = raw.slice(0, 4).map((p) => ({
-      tag: p.category ?? 'INSIGHTS',
-      meta: p.publishedAt ? formatDate(p.publishedAt) : '',
-      title: p.title,
-      excerpt: p.excerpt ?? '',
-      href: `/blog/${p.slug}`,
-      image: p.mainImage ?? null,
-    }));
-  } catch {}
-
-  return (
-    <section id="blogs" className="rounded-[28px] p-6 ring-1 ring-white/10" style={{ background: '#1A1B20' }}>
-      <SectionHeader
-        kicker="Insights"
-        title="Latest blogs"
-        desc="Short, practical notes on strategy, governance, and production readiness."
-      />
-      {posts.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {posts.map((p) => (
-            <BlogCard key={p.href} {...p} />
-          ))}
-        </div>
-      ) : (
-        <p className="text-sm text-white/50 py-4">No posts published yet — check back soon.</p>
-      )}
-      <div className="mt-5 flex flex-col items-start justify-between gap-3 rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 sm:flex-row sm:items-center">
-        <div className="text-sm text-white/55">
-          Want these tailored to your industry? We can publish a dedicated series.
-        </div>
-        <Link
-          href="/blog"
-          className="inline-flex items-center gap-2 rounded-2xl bg-white px-5 py-3 text-[11px] font-black uppercase tracking-widest text-black hover:bg-white/90 transition-colors"
-        >
-          VIEW ALL <span>→</span>
+        <Link href="/#approach" className="btn btn-outline mt-6">
+          Our approach
         </Link>
       </div>
     </section>
   );
 }
 
-// ── Services grid ─────────────────────────────────────────────────────────────
+// ── Services ─────────────────────────────────────────────────────────────────
 
 const services = [
   { title: 'AI Strategy & Roadmaps', desc: 'Prioritize use cases, align stakeholders, define success metrics, and plan delivery phases.' },
@@ -329,150 +60,99 @@ const services = [
   { title: 'Enablement & Workshops', desc: 'Executive and technical enablement: adoption playbooks, governance training, and readiness.' },
 ];
 
-function ServiceGrid() {
+function Services() {
   return (
-    <section id="services" className="rounded-[28px] p-6 ring-1 ring-white/10" style={{ background: '#1E2028' }}>
-      <SectionHeader
-        kicker="Consulting services"
-        title="What we advise on"
-        desc="Consulting-first engagements designed to de-risk adoption and make AI initiatives production-ready."
-      />
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {services.map((s) => (
-          <div key={s.title} className="rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10 hover:bg-white/8 transition-colors">
-            <div
-              className="mb-1 h-[2px] w-8 rounded-full"
-              style={{ background: 'linear-gradient(90deg, #F8B432, #E8342C)' }}
-            />
-            <div className="text-[12px] font-black uppercase tracking-wide text-white">{s.title}</div>
-            <p className="mt-2 text-sm text-white/60">{s.desc}</p>
+    <section id="services" className="section">
+      <div className="wrap">
+        <RevealSection>
+          <h2 className="h-display">
+            What we <em>advise on</em>
+          </h2>
+
+          <div className="scene-card mt-8 min-h-[440px] sm:min-h-[540px]">
+            <ValleyScene />
+            <div className="absolute inset-x-4 bottom-4 flex flex-col gap-4 sm:inset-x-8 sm:bottom-8 sm:flex-row sm:items-end sm:justify-between">
+              <div className="glass max-w-[26rem] p-5">
+                <div className="kicker">Consulting-first</div>
+                <p className="mt-2 text-[14px] leading-relaxed text-white/90">
+                  We start with decisions — use cases, KPIs, governance, and adoption — before tools.
+                  Every engagement is designed to de-risk AI and make it production-ready.
+                </p>
+              </div>
+              <Link href="/contact" className="btn btn-outline self-start sm:self-auto">
+                Start a conversation
+              </Link>
+            </div>
           </div>
-        ))}
-      </div>
-      <div className="mt-5 rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
-        <div className="text-[11px] font-black uppercase tracking-widest text-white">Execution support (optional)</div>
-        <p className="mt-1 text-sm text-white/55">
-          When required, we can support pilot execution and scale planning with your internal team or preferred partners.
-          Our positioning remains consulting-first.
+        </RevealSection>
+
+        <RevealSection stagger className="mt-12 grid grid-cols-1 gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
+          {services.map((s, i) => (
+            <div key={s.title} className="border-t border-white/10 py-7">
+              <div className="numeral text-[22px] leading-none">0{i + 1}</div>
+              <h3 className="mt-4 text-[17px] font-medium tracking-tight text-white">{s.title}</h3>
+              <p className="copy mt-2 text-[14px]">{s.desc}</p>
+            </div>
+          ))}
+        </RevealSection>
+
+        <p className="copy mt-4 max-w-2xl border-t border-white/10 pt-6 text-[13px]">
+          <span className="text-white">Execution support, when needed.</span> We can support pilot
+          execution and scale planning with your internal team or preferred partners. Our positioning
+          remains consulting-first.
         </p>
       </div>
     </section>
   );
 }
 
-// ── Approach ──────────────────────────────────────────────────────────────────
-
-const steps = [
-  { title: 'Discovery Sprint', desc: 'Use-case selection, constraints mapping, data readiness, KPI definition.', icon: '🔎' },
-  { title: 'Blueprint & Governance', desc: 'Target architecture, guardrails, evaluation plan, and operating model.', icon: '🧾' },
-  { title: 'Pilot Advisory', desc: 'Guidance to execute a pilot with clear success criteria and risk controls.', icon: '🧪' },
-  { title: 'Scale Readiness', desc: 'Production checklist, monitoring plan, cost/perf tradeoffs, rollout strategy.', icon: '📈' },
-];
-
-function Approach() {
-  return (
-    <section id="approach" className="rounded-[28px] bg-white/5 p-6 ring-1 ring-white/10">
-      <SectionHeader
-        kicker="Engagement model"
-        title="How we work"
-        desc="A pragmatic consulting approach that reduces risk and accelerates outcomes."
-      />
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {steps.map((s, i) => (
-          <div key={s.title} className="rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10">
-            <div className="flex items-start gap-3">
-              <div className="grid h-11 w-11 place-items-center rounded-2xl bg-white/10 text-xl shrink-0">{s.icon}</div>
-              <div>
-                <div className="text-[10px] font-semibold tracking-widest text-white/40 mb-1">0{i + 1}</div>
-                <div className="text-[12px] font-black uppercase tracking-wide text-white">{s.title}</div>
-                <p className="mt-1 text-sm text-white/60">{s.desc}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-// ── Why Us ────────────────────────────────────────────────────────────────────
+// ── Why us ───────────────────────────────────────────────────────────────────
 
 const whyPoints = [
-  { title: 'Consulting-first', desc: 'We start with decisions: use cases, KPIs, governance, and adoption — before tools.', icon: '🎯' },
-  { title: 'Infrastructure-aware', desc: 'Architecture guidance grounded in real constraints: security boundaries, latency, and cost.', icon: '🏗️' },
-  { title: 'Production readiness', desc: 'We advise on monitoring, evaluation, and operating models so systems stay reliable over time.', icon: '⚙️' },
-  { title: 'Vendor-neutral', desc: 'We align with your existing stack and partners — no forced platforms.', icon: '🤝' },
+  { title: 'Consulting-first', desc: 'We start with decisions: use cases, KPIs, governance, and adoption — before tools.' },
+  { title: 'Infrastructure-aware', desc: 'Architecture guidance grounded in real constraints: security boundaries, latency, and cost.' },
+  { title: 'Production readiness', desc: 'We advise on monitoring, evaluation, and operating models so systems stay reliable over time.' },
+  { title: 'Vendor-neutral', desc: 'We align with your existing stack and partners — no forced platforms.' },
 ];
 
 function WhyUs() {
   return (
-    <section id="why-us" className="rounded-[28px] p-6 ring-1 ring-white/10" style={{ background: '#1A1B20' }}>
-      <SectionHeader kicker="Differentiators" title="Why Indian Sight" />
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {whyPoints.map((p) => (
-          <div key={p.title} className="rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10 hover:bg-white/8 transition-colors">
-            <div className="text-2xl mb-2">{p.icon}</div>
-            <div className="text-[12px] font-black uppercase tracking-wide text-white">{p.title}</div>
-            <p className="mt-2 text-sm text-white/60">{p.desc}</p>
-          </div>
-        ))}
-      </div>
-      <div className="mt-5 rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
-        <div className="text-[11px] font-black uppercase tracking-widest text-white">Note on delivery</div>
-        <p className="mt-1 text-sm text-white/55">
-          We are comfortable with development, deployment, and scaling. However, we position ourselves as consulting
-          first — execution support is available when needed.
-        </p>
-      </div>
-    </section>
-  );
-}
+    <section id="why-us" className="section">
+      <div className="wrap">
+        <RevealSection>
+          <h2 className="h-display">
+            Strategy <em>x</em> Delivery
+          </h2>
+        </RevealSection>
 
-// ── Contact (home section) ────────────────────────────────────────────────────
+        <div className="mt-10 grid grid-cols-1 items-center gap-10 lg:grid-cols-[5fr_6fr] lg:gap-16">
+          <RevealSection>
+            <div className="scene-card aspect-[5/4] lg:aspect-square">
+              <ConstellationScene />
+            </div>
+          </RevealSection>
 
-function ContactSection() {
-  return (
-    <section id="contact" className="rounded-[28px] bg-white/5 p-6 ring-1 ring-white/10">
-      <SectionHeader
-        kicker="Contact"
-        title="Talk to us"
-        desc="Share your use case and constraints. We'll suggest the right next step — discovery, blueprint, or review."
-      />
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10">
-          <div className="text-[12px] font-black uppercase tracking-wide text-white">Email</div>
-          <p className="mt-2 text-sm text-white/60">business@indiansight.in</p>
-          <a
-            href="mailto:business@indiansight.in"
-            className="mt-4 inline-flex items-center justify-center rounded-2xl bg-white px-5 py-3 text-[11px] font-black uppercase tracking-widest text-black hover:bg-white/90 transition-colors"
-          >
-            Send an email
-          </a>
-        </div>
-        <div className="rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10">
-          <div className="text-[12px] font-black uppercase tracking-wide text-white">Schedule a call</div>
-          <p className="mt-2 text-sm text-white/60">
-            Prefer a call? Book a time with our consulting team directly.
-          </p>
-          <Link
-            href="/contact"
-            className="mt-4 inline-flex items-center justify-center rounded-2xl bg-white/10 px-5 py-3 text-[11px] font-black uppercase tracking-widest text-white ring-1 ring-white/10 hover:bg-white/15 transition-colors"
-          >
-            Go to contact page
-          </Link>
+          <RevealSection stagger className="grid grid-cols-1 gap-x-10 gap-y-9 sm:grid-cols-2 lg:grid-cols-1">
+            {whyPoints.map((p) => (
+              <div key={p.title}>
+                <div className="kicker">{p.title}</div>
+                <p className="mt-3 text-[16px] leading-relaxed text-white/85">{p.desc}</p>
+              </div>
+            ))}
+          </RevealSection>
         </div>
       </div>
     </section>
   );
 }
 
-// ── Right panel (sticky sidebar) ──────────────────────────────────────────────
+// ── Approach ─────────────────────────────────────────────────────────────────
 
-const phases = [
-  { num: '01', title: 'Discovery Sprint', duration: '1–2 wks' },
-  { num: '02', title: 'Blueprint', duration: '2–4 wks' },
-  { num: '03', title: 'Pilot Advisory', duration: 'optional' },
-  { num: '04', title: 'Scale Readiness', duration: 'roadmap' },
+const steps = [
+  { title: 'Discovery Sprint', duration: '1–2 weeks', desc: 'Use-case selection, constraints mapping, data readiness, KPI definition.' },
+  { title: 'Blueprint & Governance', duration: '2–4 weeks', desc: 'Target architecture, guardrails, evaluation plan, and operating model.' },
+  { title: 'Pilot Advisory', duration: 'Optional', desc: 'Guidance to execute a pilot with clear success criteria and risk controls.' },
+  { title: 'Scale Readiness', duration: 'Roadmap', desc: 'Production checklist, monitoring plan, cost/perf tradeoffs, rollout strategy.' },
 ];
 
 const deliverables = [
@@ -483,138 +163,174 @@ const deliverables = [
   { title: 'Scale readiness checklist', desc: 'Monitoring, drift planning, incident playbooks, and lifecycle updates.' },
 ];
 
-function RightPanel() {
+function Approach() {
   return (
-    <div className="space-y-6">
-
-      {/* ── What we advise on ── */}
-      <ServiceGrid />
-
-      {/* ── Discovery Sprint (mirrors HeroCard style) ── */}
-      <section
-        className="relative overflow-hidden rounded-[28px] p-8 shadow-[0_26px_70px_rgba(0,0,0,0.45)]"
-        style={{ background: '#1E1F24' }}
-      >
-        <div
-          className="pointer-events-none absolute -top-20 -right-20 h-72 w-72 rounded-full opacity-20 blur-[80px]"
-          style={{ background: 'radial-gradient(circle, #F47A35, transparent 70%)' }}
-        />
-        <div className="relative">
-          <div className="text-[10px] font-semibold uppercase tracking-widest text-white/50">Start here</div>
-          <div className="mt-2 font-black uppercase tracking-tight text-white" style={{ fontSize: 'var(--display-sm)' }}>
-            Discovery Sprint
-          </div>
-          <p className="mt-2 text-sm leading-relaxed text-white/60">
-            Get clarity fast: use-case prioritization, governance inputs, and an infrastructure-aware plan that scales.
+    <section id="approach" className="section">
+      <div className="wrap">
+        <RevealSection className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+          <h2 className="h-display">
+            How we <em>work</em>
+          </h2>
+          <p className="copy max-w-sm">
+            A pragmatic consulting approach that reduces risk and accelerates outcomes — from first
+            question to production.
           </p>
+        </RevealSection>
 
-          <div className="mt-5 grid grid-cols-2 gap-3">
-            {phases.map((p) => (
-              <div key={p.num} className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
-                <div className="text-[10px] font-semibold uppercase tracking-widest text-white/40">{p.title}</div>
-                <div className="mt-1 text-[14px] font-black uppercase tracking-wide text-white">{p.duration}</div>
+        <RevealSection stagger className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {steps.map((s, i) => (
+            <div key={s.title} className="panel flex flex-col p-6">
+              <div className="flex items-baseline justify-between">
+                <span className="numeral text-[40px] leading-none">{i + 1}</span>
+                <span className="kicker">{s.duration}</span>
               </div>
-            ))}
-          </div>
-
-          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center rounded-2xl bg-white px-5 py-3 text-[11px] font-black uppercase tracking-widest text-black hover:bg-white/90 transition-colors"
-            >
-              Contact us
-            </Link>
-            <Link
-              href="/#approach"
-              className="inline-flex items-center justify-center rounded-2xl bg-white/10 px-5 py-3 text-[11px] font-black uppercase tracking-widest text-white ring-1 ring-white/10 hover:bg-white/15 transition-colors"
-            >
-              Our approach
-            </Link>
-          </div>
-        </div>
-        <div className="pointer-events-none absolute inset-0 rounded-[28px] ring-1 ring-white/8" />
-      </section>
-
-      {/* ── Deliverables (mirrors ServiceGrid style) ── */}
-      <section className="rounded-[28px] p-6 ring-1 ring-white/10" style={{ background: '#1E2028' }}>
-        <SectionHeader
-          kicker="What you get"
-          title="Deliverables"
-          desc="Consulting-first outputs designed to de-risk adoption and make AI initiatives production-ready."
-        />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {deliverables.map((d) => (
-            <div key={d.title} className="rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10 hover:bg-white/8 transition-colors">
-              <div
-                className="mb-1 h-[2px] w-8 rounded-full"
-                style={{ background: 'linear-gradient(90deg, #F8B432, #E8342C)' }}
-              />
-              <div className="text-[12px] font-black uppercase tracking-wide text-white">{d.title}</div>
-              <p className="mt-2 text-sm text-white/60">{d.desc}</p>
+              <h3 className="mt-10 text-[17px] font-medium tracking-tight text-white">{s.title}</h3>
+              <p className="copy mt-2 text-[14px]">{s.desc}</p>
             </div>
           ))}
-        </div>
-      </section>
+        </RevealSection>
 
-    </div>
+        <div className="mt-20 grid grid-cols-1 gap-10 lg:grid-cols-[4fr_7fr] lg:gap-16">
+          <RevealSection>
+            <div className="kicker">What you get</div>
+            <h3 className="h-title mt-3">
+              Deliverables you can <em>act on</em>
+            </h3>
+            <p className="copy mt-4 max-w-sm">
+              Consulting-first outputs designed to de-risk adoption and make AI initiatives
+              production-ready.
+            </p>
+          </RevealSection>
+
+          <RevealSection>
+            <dl className="rule-list">
+              {deliverables.map((d) => (
+                <div key={d.title} className="grid grid-cols-1 gap-1 py-5 sm:grid-cols-[14rem_1fr] sm:gap-6">
+                  <dt className="text-[15px] font-medium text-white">{d.title}</dt>
+                  <dd className="copy text-[14px]">{d.desc}</dd>
+                </div>
+              ))}
+            </dl>
+          </RevealSection>
+        </div>
+      </div>
+    </section>
   );
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
+// ── Blog ─────────────────────────────────────────────────────────────────────
 
-export default async function HomePage() {
+function BlogCard({ title, excerpt, meta, tag, href, image }) {
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-      {/* Left column — all sections */}
-      <div className="space-y-6">
-        <RevealSection>
-          <HeroCard />
+    <Link href={href} className="group block">
+      <div className="scene-card aspect-[16/10]">
+        {image ? (
+          <img
+            src={image}
+            alt=""
+            className="scene object-cover transition duration-700 group-hover:scale-[1.04]"
+          />
+        ) : (
+          <ConstellationScene />
+        )}
+      </div>
+      <div className="mt-4 flex items-center gap-3">
+        <span className="kicker" style={{ color: 'var(--gold)' }}>{tag}</span>
+        {meta && <span className="kicker">{meta}</span>}
+      </div>
+      <h3 className="mt-2 line-clamp-2 text-[18px] font-medium leading-snug tracking-tight text-white transition-colors group-hover:text-white/75">
+        {title}
+      </h3>
+      {excerpt && <p className="copy mt-2 line-clamp-2 text-[14px]">{excerpt}</p>}
+    </Link>
+  );
+}
+
+async function Blog() {
+  let posts = [];
+  try {
+    const raw = await client.fetch(allPostsQuery);
+    posts = raw.slice(0, 3).map((p) => ({
+      tag: p.category ?? 'Insights',
+      meta: p.publishedAt ? formatDate(p.publishedAt) : '',
+      title: p.title,
+      excerpt: p.excerpt ?? '',
+      href: `/blog/${p.slug}`,
+      image: p.mainImage ?? null,
+    }));
+  } catch {}
+
+  return (
+    <section id="blogs" className="section">
+      <div className="wrap">
+        <RevealSection className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <h2 className="h-display">
+            Latest <em>insights</em>
+          </h2>
+          <Link href="/blog" className="btn btn-outline self-start sm:self-auto">
+            View all <Arrow size={14} />
+          </Link>
         </RevealSection>
 
-        <RevealSection>
-          <MarqueeStrip />
-        </RevealSection>
+        {posts.length > 0 ? (
+          <RevealSection stagger className="mt-10 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+            {posts.map((p) => (
+              <BlogCard key={p.href} {...p} />
+            ))}
+          </RevealSection>
+        ) : (
+          <p className="copy mt-8">No posts published yet — check back soon.</p>
+        )}
+      </div>
+    </section>
+  );
+}
 
+// ── Contact ──────────────────────────────────────────────────────────────────
+
+function Contact() {
+  return (
+    <section id="contact" className="section">
+      <div className="wrap">
         <RevealSection>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            <SmallCard
-              tone="services"
-              kicker="CONSULTING SERVICES"
-              title="SERVICES"
-              desc="Strategy, GenAI/RAG advisory, governance, architecture guidance, and MLOps readiness."
-              href="/#services"
-            />
-            <SmallCard
-              tone="why"
-              kicker="ENGAGEMENT MODEL"
-              title="APPROACH"
-              desc="Discovery → Blueprint → Pilot advisory → Scale readiness, aligned to constraints and KPIs."
-              href="/#approach"
-            />
+          <div className="scene-card flex min-h-[420px] items-center justify-center px-6 py-16 text-center">
+            <HorizonScene />
+            <div className="relative flex flex-col items-center">
+              <div className="kicker">Contact</div>
+              <h2 className="h-hero mt-4" style={{ fontSize: 'clamp(2.8rem, 7vw, 5.5rem)' }}>
+                Talk <em>to us</em>
+              </h2>
+              <p className="mt-5 max-w-md text-[14px] leading-relaxed text-white/80">
+                Share your use case and constraints. We&apos;ll suggest the right next step —
+                discovery, blueprint, or review.
+              </p>
+              <div className="mt-8 flex flex-wrap justify-center gap-3">
+                <Link href="/contact" className="btn btn-primary">
+                  Get in touch <Arrow size={14} />
+                </Link>
+                <a href={`mailto:${CONTACT_EMAIL}`} className="btn btn-outline">
+                  {CONTACT_EMAIL}
+                </a>
+              </div>
+            </div>
           </div>
         </RevealSection>
-
-        <RevealSection>
-          <BlogSection />
-        </RevealSection>
-
-        <RevealSection>
-          <Approach />
-        </RevealSection>
-
-        <RevealSection>
-          <WhyUs />
-        </RevealSection>
-
-        <RevealSection>
-          <ContactSection />
-        </RevealSection>
       </div>
+    </section>
+  );
+}
 
-      {/* Right column — sticky panel */}
-      <div className="lg:sticky lg:top-20 lg:self-start">
-        <RightPanel />
-      </div>
-    </div>
+// ── Page ─────────────────────────────────────────────────────────────────────
+
+export default function HomePage() {
+  return (
+    <>
+      <Hero />
+      <Services />
+      <WhyUs />
+      <Approach />
+      <Blog />
+      <Contact />
+    </>
   );
 }

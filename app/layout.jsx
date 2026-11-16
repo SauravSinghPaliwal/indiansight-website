@@ -1,7 +1,17 @@
 import './globals.css';
+import { Inter, Instrument_Serif } from 'next/font/google';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { SITE_URL } from '../lib/site';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
+const instrument = Instrument_Serif({
+  subsets: ['latin'],
+  weight: '400',
+  style: ['normal', 'italic'],
+  variable: '--font-instrument',
+  display: 'swap',
+});
 
 const description =
   'Indian Sight is a consulting-first AI firm. We help leadership and technical teams prioritize use cases, define governance, and design infrastructure-aware architectures.';
@@ -29,29 +39,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body
-        style={{
-          background: '#15161A',
-          fontFamily:
-            "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-        }}
-      >
-        {/* Gradient top accent bar */}
-        <div
-          className="h-[3px] w-full"
-          style={{ background: 'linear-gradient(90deg, #F8B432 0%, #F47A35 50%, #E8342C 100%)' }}
-        />
-
+    <html lang="en" className={`${inter.variable} ${instrument.variable}`}>
+      <body>
         <Navbar />
-
-        <main className="mx-auto max-w-screen-2xl px-4 py-6 sm:px-8 sm:py-8">
-          {children}
-        </main>
-
-        <div className="mx-auto max-w-screen-2xl px-4 pb-6 sm:px-8 sm:pb-8">
-          <Footer />
-        </div>
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );

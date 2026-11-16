@@ -15,19 +15,11 @@ const services = [
 const faq = [
   {
     q: 'How long does a typical engagement take?',
-    a: 'Discovery & scoping takes 1–2 weeks. A focused blueprint is 2–4 weeks. Enterprise production advisory ranges from 3–6 months.',
-  },
-  {
-    q: 'Do you work with startups or only large enterprises?',
-    a: 'Primarily mid-market and enterprise, but we selectively work with high-growth Series B+ startups with strong data foundations.',
-  },
-  {
-    q: 'How do you handle data security and privacy?',
-    a: 'We sign NDA and DPA on day one. All work can be done within your private cloud environment under your security policies.',
+    a: 'A discovery sprint takes 1–2 weeks and a blueprint 2–4 weeks. Pilot advisory and scale readiness are optional and scoped to your roadmap.',
   },
   {
     q: 'Can you work with our existing tech team?',
-    a: 'Absolutely — co-development and knowledge transfer to your internal team is standard in most of our engagements.',
+    a: 'Yes. We are consulting-first, and when execution support is needed we work alongside your internal team or preferred partners.',
   },
 ];
 
@@ -54,112 +46,86 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <section className="rounded-[28px] p-8" style={{ background: '#2B2C30' }}>
-        <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-[10px] font-semibold tracking-widest text-white/85 ring-1 ring-white/10">
-          GET IN TOUCH
-        </div>
-        <h1 className="mt-4 text-[36px] font-black uppercase leading-[0.95] tracking-tight text-white sm:text-[48px]">
-          LET&apos;S BUILD
-          <br />
-          SOMETHING
-          <br />
-          REMARKABLE
-        </h1>
-        <p className="mt-4 max-w-[520px] text-sm leading-relaxed text-white/70">
-          Tell us about your AI challenge. We&apos;ll get back to you within one business day with
-          initial thoughts and next steps.
-        </p>
-      </section>
+    <div className="wrap page">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-[5fr_6fr] lg:gap-16">
+        {/* Left — intro + contact details */}
+        <div>
+          <div className="kicker">Get in touch</div>
+          <h1 className="h-hero mt-4" style={{ fontSize: 'clamp(3rem, 7vw, 5.5rem)' }}>
+            Let&apos;s build something <em>remarkable</em>
+          </h1>
+          <p className="copy mt-6 max-w-md">
+            Tell us about your AI challenge. We&apos;ll get back to you within one business day with
+            initial thoughts and next steps. Whether you&apos;re just starting your AI journey or
+            looking to scale an existing system, our consulting team is ready to dive in.
+          </p>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* Left — info */}
-        <div className="space-y-4">
-          <section className="rounded-[28px] bg-white/5 p-6 ring-1 ring-white/10">
-            <div className="text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-4">How Can We Help?</div>
-            <p className="text-sm text-white/70 leading-relaxed mb-5">
-              Whether you&apos;re just starting your AI journey or looking to scale an existing system,
-              our consulting team is ready to dive in.
-            </p>
-
+          <dl className="rule-list mt-10 max-w-md">
             {[
-              { icon: '📞', label: 'Phone', value: CONTACT_PHONE_DISPLAY, href: `tel:${CONTACT_PHONE}` },
-              { icon: '✉️', label: 'Email', value: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
-            ].map(({ icon, label, value, href }) => (
-              <div key={label} className="flex items-start gap-4 mb-4">
-                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/10 text-xl">{icon}</div>
-                <div>
-                  <div className="text-[11px] font-black uppercase tracking-widest text-white">{label}</div>
-                  <a href={href} className="mt-0.5 block text-sm text-white/60 hover:text-white transition-colors">
+              { label: 'Phone', value: CONTACT_PHONE_DISPLAY, href: `tel:${CONTACT_PHONE}` },
+              { label: 'Email', value: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
+            ].map(({ label, value, href }) => (
+              <div key={label} className="flex items-baseline justify-between gap-6 py-4">
+                <dt className="kicker">{label}</dt>
+                <dd>
+                  <a href={href} className="text-[15px] text-white/85 transition-colors hover:text-white">
                     {value}
                   </a>
-                </div>
+                </dd>
               </div>
             ))}
-          </section>
+          </dl>
         </div>
 
         {/* Right — form */}
         <div>
           {submitted ? (
-            <div className="rounded-[28px] bg-white/5 p-8 ring-1 ring-white/10 text-center">
-              <div className="text-5xl mb-4">✉️</div>
-              <div className="text-2xl font-black uppercase tracking-tight text-white mb-2">Almost done</div>
-              <p className="text-sm text-white/70 max-w-sm mx-auto">
+            <div className="panel p-8 text-center sm:p-12">
+              <h2 className="h-title">
+                Almost <em>done</em>
+              </h2>
+              <p className="copy mx-auto mt-4 max-w-sm">
                 Your email app should have opened with your message ready — press send there to
                 reach us. If nothing opened, email us directly at{' '}
                 <a href={`mailto:${CONTACT_EMAIL}`} className="text-white underline">{CONTACT_EMAIL}</a>.
               </p>
-              <button
-                onClick={() => setSubmitted(false)}
-                className="mt-6 inline-flex items-center justify-center rounded-2xl bg-white/10 px-5 py-3 text-[11px] font-black uppercase tracking-widest text-white ring-1 ring-white/10 hover:bg-white/15"
-              >
+              <button onClick={() => setSubmitted(false)} className="btn btn-outline mt-7">
                 Back to the form
               </button>
             </div>
           ) : (
-            <form
-              className="rounded-[28px] bg-white/5 p-6 ring-1 ring-white/10 space-y-4"
-              onSubmit={handleSubmit}
-            >
-              <div className="text-[12px] font-black uppercase tracking-wide text-white mb-2">Send Us a Message</div>
+            <form className="panel space-y-5 p-6 sm:p-8" onSubmit={handleSubmit}>
+              <div className="text-[17px] font-medium tracking-tight text-white">Send us a message</div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div>
-                  <label htmlFor="contact-firstName" className="block text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-2">
-                  First Name *
-                </label>
-                <input
-                  id="contact-firstName"
-                  name="firstName"
-                  autoComplete="given-name"
+                  <label htmlFor="contact-firstName" className="label">First name *</label>
+                  <input
+                    id="contact-firstName"
+                    name="firstName"
+                    autoComplete="given-name"
                     type="text"
                     required
                     placeholder="Rajesh"
-                    className="w-full rounded-2xl bg-white/10 px-4 py-3 text-sm text-white placeholder-white/30 ring-1 ring-white/20 outline-none focus:ring-white/50"
+                    className="field"
                   />
                 </div>
                 <div>
-                  <label htmlFor="contact-lastName" className="block text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-2">
-                  Last Name *
-                </label>
-                <input
-                  id="contact-lastName"
-                  name="lastName"
-                  autoComplete="family-name"
+                  <label htmlFor="contact-lastName" className="label">Last name *</label>
+                  <input
+                    id="contact-lastName"
+                    name="lastName"
+                    autoComplete="family-name"
                     type="text"
                     required
                     placeholder="Kumar"
-                    className="w-full rounded-2xl bg-white/10 px-4 py-3 text-sm text-white placeholder-white/30 ring-1 ring-white/20 outline-none focus:ring-white/50"
+                    className="field"
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="contact-email" className="block text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-2">
-                  Work Email *
-                </label>
+                <label htmlFor="contact-email" className="label">Work email *</label>
                 <input
                   id="contact-email"
                   name="email"
@@ -167,14 +133,12 @@ export default function ContactPage() {
                   type="email"
                   required
                   placeholder="rajesh@company.com"
-                  className="w-full rounded-2xl bg-white/10 px-4 py-3 text-sm text-white placeholder-white/30 ring-1 ring-white/20 outline-none focus:ring-white/50"
+                  className="field"
                 />
               </div>
 
               <div>
-                <label htmlFor="contact-company" className="block text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-2">
-                  Company *
-                </label>
+                <label htmlFor="contact-company" className="label">Company *</label>
                 <input
                   id="contact-company"
                   name="company"
@@ -182,46 +146,34 @@ export default function ContactPage() {
                   type="text"
                   required
                   placeholder="Acme Corp"
-                  className="w-full rounded-2xl bg-white/10 px-4 py-3 text-sm text-white placeholder-white/30 ring-1 ring-white/20 outline-none focus:ring-white/50"
+                  className="field"
                 />
               </div>
 
               <div>
-                <label htmlFor="contact-service" className="block text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-2">
-                  Service of Interest
-                </label>
-                <select
-                  id="contact-service"
-                  name="service"
-                  className="w-full rounded-2xl bg-white/10 px-4 py-3 text-sm text-white ring-1 ring-white/20 outline-none focus:ring-white/50 appearance-none"
-                  style={{ background: 'rgba(255,255,255,0.07)' }}
-                >
-                  <option value="">Select a service...</option>
+                <label htmlFor="contact-service" className="label">Service of interest</label>
+                <select id="contact-service" name="service" className="field appearance-none">
+                  <option value="" style={{ background: '#0A0B0F', color: 'white' }}>Select a service...</option>
                   {services.map((s) => (
-                    <option key={s} value={s} style={{ background: '#1e2535', color: 'white' }}>{s}</option>
+                    <option key={s} value={s} style={{ background: '#0A0B0F', color: 'white' }}>{s}</option>
                   ))}
                 </select>
               </div>
 
               <div>
-                <label htmlFor="contact-message" className="block text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-2">
-                  Tell us about your project *
-                </label>
+                <label htmlFor="contact-message" className="label">Tell us about your project *</label>
                 <textarea
                   id="contact-message"
                   name="message"
                   required
                   rows={4}
                   placeholder="Describe your business challenge, the data you have, and the outcome you're looking for..."
-                  className="w-full rounded-2xl bg-white/10 px-4 py-3 text-sm text-white placeholder-white/30 ring-1 ring-white/20 outline-none focus:ring-white/50 resize-y"
+                  className="field resize-y"
                 />
               </div>
 
-              <button
-                type="submit"
-                className="w-full rounded-2xl bg-white py-3 text-[11px] font-black uppercase tracking-widest text-black hover:bg-white/90 transition-colors"
-              >
-                Send Message →
+              <button type="submit" className="btn btn-primary w-full py-3.5">
+                Send message
               </button>
             </form>
           )}
@@ -229,14 +181,16 @@ export default function ContactPage() {
       </div>
 
       {/* FAQ */}
-      <section className="rounded-[28px] bg-white/5 p-6 ring-1 ring-white/10">
-        <div className="text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-2">FAQ</div>
-        <div className="text-2xl font-black uppercase tracking-tight text-white mb-5">Common Questions</div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <section className="mt-24">
+        <div className="kicker">FAQ</div>
+        <h2 className="h-display mt-3">
+          Common <em>questions</em>
+        </h2>
+        <div className="mt-10 grid grid-cols-1 gap-x-10 sm:grid-cols-2">
           {faq.map(({ q, a }) => (
-            <div key={q} className="rounded-[22px] bg-white/5 p-5 ring-1 ring-white/10">
-              <div className="text-[12px] font-black uppercase tracking-wide text-white mb-2">{q}</div>
-              <p className="text-sm text-white/70 leading-relaxed">{a}</p>
+            <div key={q} className="border-t border-white/10 py-7">
+              <h3 className="text-[17px] font-medium tracking-tight text-white">{q}</h3>
+              <p className="copy mt-2 text-[14px]">{a}</p>
             </div>
           ))}
         </div>
