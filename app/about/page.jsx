@@ -20,7 +20,7 @@ export default function AboutPage() {
     <>
       {/* Page hero */}
       <section className="relative overflow-hidden">
-        <HorizonScene />
+        <HorizonScene fadeBottom />
         <div className="wrap relative pb-28 pt-40 text-center sm:pb-36 sm:pt-48">
           <div className="kicker">About us</div>
           <h1 className="h-hero mx-auto mt-5 max-w-4xl" style={{ fontSize: 'clamp(3rem, 8vw, 6.5rem)' }}>
