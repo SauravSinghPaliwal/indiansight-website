@@ -267,21 +267,6 @@ body {
   }
 }
 
-/* ── Scene artwork motion ── */
-@keyframes twinkle {
-  0%, 100% { opacity: 0.25; }
-  50%      { opacity: 1; }
-}
-@keyframes drift-up {
-  from { transform: translateY(10px); opacity: 0.55; }
-  50%  { opacity: 1; }
-  to   { transform: translateY(-14px); opacity: 0.55; }
-}
-.twinkle-a { animation: twinkle 4.5s ease-in-out infinite; }
-.twinkle-b { animation: twinkle 6.5s ease-in-out 1.2s infinite; }
-.sparks-a  { animation: drift-up 7s ease-in-out infinite alternate; }
-.sparks-b  { animation: drift-up 9s ease-in-out 1.5s infinite alternate; }
-
 /* ── Scroll reveal ── */
 .reveal {
   opacity: 0;
@@ -317,5 +302,4 @@ body {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal, .reveal-stagger > * { opacity: 1; transform: none; transition: none; }
-  .twinkle-a, .twinkle-b, .sparks-a, .sparks-b { animation: none; }
 }
